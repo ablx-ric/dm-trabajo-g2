@@ -1,0 +1,23 @@
+[project]
+name = "dm-trabajo-g2"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+authors = [
+    { name = "abelwatt", email = "abellopezllaja@gmail.com" }
+]
+requires-python = ">=3.10"
+dependencies = [
+    "numpy>=2.2.6",
+    "pandas>=2.3.3",
+    "psycopg2-binary>=2.9.13",
+    "scikit-learn>=1.7.2",
+    "sqlalchemy>=2.0.57",
+]
+
+[project.scripts]
+dm-trabajo-g2 = "dm_trabajo_g2:main"
+
+[build-system]
+requires = ["uv_build>=0.12.23,<0.13.0"]
+build-backend = "uv_build"

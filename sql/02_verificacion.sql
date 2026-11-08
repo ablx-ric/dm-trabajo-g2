@@ -1,4 +1,4 @@
--- Consultas de verificacion (capturas para el informe)
+-- Consultas de verificacion
 
 -- A) Conteos: Pentaho (sin sufijo) vs Python (_py). Esperado: 570 / 18539 / 18554 / 555
 SELECT 'tabla_enfermedades' AS tabla, COUNT(*) AS filas FROM tabla_enfermedades

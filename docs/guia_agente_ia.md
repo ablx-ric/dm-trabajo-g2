@@ -23,6 +23,8 @@ Este archivo da a un asistente de IA (Claude, Copilot, ChatGPT, etc.) **todo el 
 
 **Orden obligatorio:** T2 debe estar terminado antes de T3, porque T3 lee `tabla_enfermedades_1`. El job necesita T1, T2 y T3.
 
+**Cada parte se trabaja en su propia rama de Git y se integra a `main` con un Pull Request** (ramas `t2-lpd`, `t3-integracion` y `job-etl`; detalle en la sección 3).
+
 ---
 
 ## 1. De qué trata el trabajo
@@ -133,11 +135,52 @@ dm-trabajo-g2/
 └── pyproject.toml, uv.lock, .python-version, README.md
 ```
 
-### Reglas de Git para no pisarse
+### Flujo de Git: cada integrante trabaja en su propia rama
 
-- Haz `git pull` antes de abrir un `.ktr`.
-- **Cada `.ktr` lo edita una sola persona a la vez.** Los `.ktr` son XML largo y los conflictos de merge son difíciles de resolver.
-- Haz commit y push apenas termines tu parte, con un mensaje claro (por ejemplo, `T2: renombrar a carga completa`).
+**Nadie hace commit ni push directo a `main`.** Cada parte se trabaja en una rama propia y se integra a `main` con un Pull Request (PR) en GitHub.
+
+| Parte | Rama | Archivo que edita | Depende de |
+|---|---|---|---|
+| T2 (resto) | `t2-lpd` | `pentaho/t2_lpd.ktr` | `main` actual |
+| T3 | `t3-integracion` | `pentaho/t3_integracion.ktr` | T2 ya integrado en `main` |
+| Job | `job-etl` | `pentaho/job_etl.kjb` | T2 y T3 ya integrados en `main` |
+
+**Al empezar tu parte:**
+
+```powershell
+git checkout main
+git pull
+git checkout -b t2-lpd          # usa el nombre de tu rama
+```
+
+**Mientras trabajas** (commits pequeños, uno por paso o grupo de pasos):
+
+```powershell
+git add pentaho/t2_lpd.ktr
+git commit -m "T2: renombrar campos e imputar medianas"
+git push -u origin t2-lpd       # la primera vez; luego basta con git push
+```
+
+**Al terminar:**
+
+1. En GitHub, abre un **Pull Request** de tu rama hacia `main`. En la descripción pon los conteos que obtuviste (por ejemplo `tabla_enfermedades_1 = 18539, E=0`).
+2. Otro integrante lo revisa y lo fusiona (**Merge**).
+3. Avisa al siguiente integrante.
+
+**Si tu parte depende de otra que se fusionó después de crear tu rama** (por ejemplo, T3 necesita el T2 terminado):
+
+```powershell
+git checkout main
+git pull
+git checkout t3-integracion
+git merge main
+```
+
+**Reglas:**
+
+- **Cada rama toca solo su archivo** (y, si hace falta, `docs/guia_agente_ia.md` para actualizar la sección 0). No modifiques el `.ktr` de otra parte en tu rama.
+- **Los `.ktr` y `.kjb` son XML largo: un conflicto de merge en ellos es muy difícil de resolver.** Si Git reporta un conflicto en un `.ktr`, no lo edites a mano: avisa al grupo antes de seguir.
+- No subas archivos generados ni personales: `.venv/`, capturas sueltas, contraseñas.
 
 ---
 
@@ -603,3 +646,4 @@ Responder las 5 preguntas de la guía y llenar la carátula (estudiantes, docent
 9. **Responde en español**, breve y concreto.
 10. **No uses `_descartar/`** ni PyCaret salvo que el grupo indique lo contrario.
 11. **Al terminar una parte, actualiza la tabla de la sección 0** de este archivo y haz commit.
+12. **Git:** trabaja siempre en la rama de tu parte (sección 3). **Nunca hagas commit, push ni merge directo a `main`**: la integración se hace con un Pull Request en GitHub. Antes de crear o cambiar de rama, confirma con el usuario en qué rama está (`git branch --show-current`).

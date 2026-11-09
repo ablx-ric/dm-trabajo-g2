@@ -7,7 +7,7 @@
     <trans_version/>
     <trans_type>Normal</trans_type>
     <directory>/</directory>
-    <filename>D:\03_projects\dm-trabajo-g2\pentaho\t3_integracion.ktr</filename>
+    <filename>file:///C:/Users/enocc/Documents/UNIVERSIDAD/Mineria de datos/Tareo unidad02/dm-trabajo-g2/pentaho/t3_integracion.ktr</filename>
     <parameters>
     </parameters>
     <log>
@@ -430,7 +430,7 @@
     <created_date>2026/11/08 22:10:31.875</created_date>
     <modified_user>-</modified_user>
     <modified_date>2026/11/08 22:10:31.875</modified_date>
-    <key_for_session_key/>
+    <key_for_session_key>H4sIAAAAAAAA/wMAAAAAAAAAAAA=</key_for_session_key>
     <is_key_private>N</is_key_private>
   </info>
   <notepads>
@@ -444,7 +444,7 @@
     <hop>
       <from>Leer LPD</from>
       <to>Origen LPD</to>
-      <enabled>Y</enabled>
+      <enabled>N</enabled>
     </hop>
     <hop>
       <from>Origen ILPD</from>
@@ -476,12 +476,253 @@
       <to>Cargar integrada</to>
       <enabled>Y</enabled>
     </hop>
+    <hop>
+      <from>Leer ILPD</from>
+      <to>Ordenar A</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Leer LPD</from>
+      <to>Ordenar B</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Ordenar B</from>
+      <to>Comunes</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Ordenar A</from>
+      <to>Comunes</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Comunes</from>
+      <to>Quitar campos repetidos</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Quitar campos repetidos</from>
+      <to>Cargar tabla_comunes</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Leer LPD</from>
+      <to>Origen LPD</to>
+      <enabled>Y</enabled>
+    </hop>
   </order>
+  <step>
+    <name>Cargar integrada</name>
+    <type>TableOutput</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <connection>conection-mineria-untrm-bd</connection>
+    <schema>public</schema>
+    <table>tabla_enfermedades_integrada</table>
+    <commit>1000</commit>
+    <truncate>Y</truncate>
+    <ignore_errors>N</ignore_errors>
+    <use_batch>Y</use_batch>
+    <specify_fields>Y</specify_fields>
+    <partitioning_enabled>N</partitioning_enabled>
+    <partitioning_field/>
+    <partitioning_daily>N</partitioning_daily>
+    <partitioning_monthly>Y</partitioning_monthly>
+    <tablename_in_field>N</tablename_in_field>
+    <tablename_field/>
+    <tablename_in_table>Y</tablename_in_table>
+    <return_keys>N</return_keys>
+    <return_field/>
+    <fields>
+      <field>
+        <column_name>edad</column_name>
+        <stream_name>edad</stream_name>
+      </field>
+      <field>
+        <column_name>genero</column_name>
+        <stream_name>genero</stream_name>
+      </field>
+      <field>
+        <column_name>bilirrubina_total</column_name>
+        <stream_name>bilirrubina_total</stream_name>
+      </field>
+      <field>
+        <column_name>bilirrubina_directa</column_name>
+        <stream_name>bilirrubina_directa</stream_name>
+      </field>
+      <field>
+        <column_name>fosfatasa_alcalina</column_name>
+        <stream_name>fosfatasa_alcalina</stream_name>
+      </field>
+      <field>
+        <column_name>alt_sgpt</column_name>
+        <stream_name>alt_sgpt</stream_name>
+      </field>
+      <field>
+        <column_name>ast_sgot</column_name>
+        <stream_name>ast_sgot</stream_name>
+      </field>
+      <field>
+        <column_name>proteinas_totales</column_name>
+        <stream_name>proteinas_totales</stream_name>
+      </field>
+      <field>
+        <column_name>albumina</column_name>
+        <stream_name>albumina</stream_name>
+      </field>
+      <field>
+        <column_name>relacion_a_g</column_name>
+        <stream_name>relacion_a_g</stream_name>
+      </field>
+      <field>
+        <column_name>diagnostico</column_name>
+        <stream_name>diagnostico</stream_name>
+      </field>
+      <field>
+        <column_name>origen</column_name>
+        <stream_name>origen</stream_name>
+      </field>
+      <field>
+        <column_name>id_paciente</column_name>
+        <stream_name>id_paciente</stream_name>
+      </field>
+    </fields>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>1120</xloc>
+      <yloc>400</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Eliminar repetidos</name>
+    <type>Unique</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <count_rows>N</count_rows>
+    <count_field/>
+    <reject_duplicate_row>N</reject_duplicate_row>
+    <error_description/>
+    <fields>
+      <field>
+        <name>edad</name>
+        <case_insensitive>N</case_insensitive>
+      </field>
+      <field>
+        <name>genero</name>
+        <case_insensitive>N</case_insensitive>
+      </field>
+      <field>
+        <name>bilirrubina_total</name>
+        <case_insensitive>N</case_insensitive>
+      </field>
+      <field>
+        <name>bilirrubina_directa</name>
+        <case_insensitive>N</case_insensitive>
+      </field>
+      <field>
+        <name>fosfatasa_alcalina</name>
+        <case_insensitive>N</case_insensitive>
+      </field>
+      <field>
+        <name>alt_sgpt</name>
+        <case_insensitive>N</case_insensitive>
+      </field>
+      <field>
+        <name>ast_sgot</name>
+        <case_insensitive>N</case_insensitive>
+      </field>
+      <field>
+        <name>proteinas_totales</name>
+        <case_insensitive>N</case_insensitive>
+      </field>
+      <field>
+        <name>albumina</name>
+        <case_insensitive>N</case_insensitive>
+      </field>
+      <field>
+        <name>relacion_a_g</name>
+        <case_insensitive>N</case_insensitive>
+      </field>
+      <field>
+        <name>diagnostico</name>
+        <case_insensitive>N</case_insensitive>
+      </field>
+    </fields>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>1296</xloc>
+      <yloc>272</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Generar id_paciente</name>
+    <type>Sequence</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <valuename>id_paciente</valuename>
+    <use_database>N</use_database>
+    <connection/>
+    <schema/>
+    <seqname>SEQ_</seqname>
+    <use_counter>Y</use_counter>
+    <counter_name/>
+    <start_at>1</start_at>
+    <increment_by>1</increment_by>
+    <max_value>999999999</max_value>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>1296</xloc>
+      <yloc>400</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
   <step>
     <name>Leer ILPD</name>
     <type>TableInput</type>
     <description/>
-    <distribute>Y</distribute>
+    <distribute>N</distribute>
     <custom_distribution/>
     <copies>1</copies>
     <partitioning>
@@ -771,7 +1012,7 @@
     <name>Leer LPD</name>
     <type>TableInput</type>
     <description/>
-    <distribute>Y</distribute>
+    <distribute>N</distribute>
     <custom_distribution/>
     <copies>1</copies>
     <partitioning>
@@ -1053,112 +1294,7 @@
     </remotesteps>
     <GUI>
       <xloc>144</xloc>
-      <yloc>240</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>Origen ILPD</name>
-    <type>Constant</type>
-    <description/>
-    <distribute>Y</distribute>
-    <custom_distribution/>
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name/>
-    </partitioning>
-    <fields>
-      <field>
-        <name>origen</name>
-        <type>String</type>
-        <format/>
-        <currency/>
-        <decimal/>
-        <group/>
-        <nullif>ILPD</nullif>
-        <length>5</length>
-        <precision>-1</precision>
-        <set_empty_string>N</set_empty_string>
-      </field>
-    </fields>
-    <attributes/>
-    <cluster_schema/>
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>368</xloc>
-      <yloc>64</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>Origen LPD</name>
-    <type>Constant</type>
-    <description/>
-    <distribute>Y</distribute>
-    <custom_distribution/>
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name/>
-    </partitioning>
-    <fields>
-      <field>
-        <name>origen</name>
-        <type>String</type>
-        <format/>
-        <currency/>
-        <decimal/>
-        <group/>
-        <nullif>LPD</nullif>
-        <length>5</length>
-        <precision>-1</precision>
-        <set_empty_string>N</set_empty_string>
-      </field>
-    </fields>
-    <attributes/>
-    <cluster_schema/>
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>368</xloc>
-      <yloc>240</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>Unir datasets</name>
-    <type>Append</type>
-    <description/>
-    <distribute>Y</distribute>
-    <custom_distribution/>
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name/>
-    </partitioning>
-    <head_name>Origen ILPD</head_name>
-    <tail_name>Origen LPD</tail_name>
-    <attributes/>
-    <cluster_schema/>
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>624</xloc>
-      <yloc>144</yloc>
+      <yloc>496</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1287,14 +1423,14 @@
       </output>
     </remotesteps>
     <GUI>
-      <xloc>784</xloc>
-      <yloc>144</yloc>
+      <xloc>1056</xloc>
+      <yloc>272</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
   <step>
-    <name>Eliminar repetidos</name>
-    <type>Unique</type>
+    <name>Origen ILPD</name>
+    <type>Constant</type>
     <description/>
     <distribute>Y</distribute>
     <custom_distribution/>
@@ -1303,54 +1439,18 @@
       <method>none</method>
       <schema_name/>
     </partitioning>
-    <count_rows>N</count_rows>
-    <count_field/>
-    <reject_duplicate_row>N</reject_duplicate_row>
-    <error_description/>
     <fields>
       <field>
-        <name>edad</name>
-        <case_insensitive>N</case_insensitive>
-      </field>
-      <field>
-        <name>genero</name>
-        <case_insensitive>N</case_insensitive>
-      </field>
-      <field>
-        <name>bilirrubina_total</name>
-        <case_insensitive>N</case_insensitive>
-      </field>
-      <field>
-        <name>bilirrubina_directa</name>
-        <case_insensitive>N</case_insensitive>
-      </field>
-      <field>
-        <name>fosfatasa_alcalina</name>
-        <case_insensitive>N</case_insensitive>
-      </field>
-      <field>
-        <name>alt_sgpt</name>
-        <case_insensitive>N</case_insensitive>
-      </field>
-      <field>
-        <name>ast_sgot</name>
-        <case_insensitive>N</case_insensitive>
-      </field>
-      <field>
-        <name>proteinas_totales</name>
-        <case_insensitive>N</case_insensitive>
-      </field>
-      <field>
-        <name>albumina</name>
-        <case_insensitive>N</case_insensitive>
-      </field>
-      <field>
-        <name>relacion_a_g</name>
-        <case_insensitive>N</case_insensitive>
-      </field>
-      <field>
-        <name>diagnostico</name>
-        <case_insensitive>N</case_insensitive>
+        <name>origen</name>
+        <type>String</type>
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
+        <nullif>ILPD</nullif>
+        <length>5</length>
+        <precision>-1</precision>
+        <set_empty_string>N</set_empty_string>
       </field>
     </fields>
     <attributes/>
@@ -1362,14 +1462,14 @@
       </output>
     </remotesteps>
     <GUI>
-      <xloc>960</xloc>
-      <yloc>144</yloc>
+      <xloc>368</xloc>
+      <yloc>64</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
   <step>
-    <name>Generar id_paciente</name>
-    <type>Sequence</type>
+    <name>Origen LPD</name>
+    <type>Constant</type>
     <description/>
     <distribute>Y</distribute>
     <custom_distribution/>
@@ -1378,16 +1478,20 @@
       <method>none</method>
       <schema_name/>
     </partitioning>
-    <valuename>id_paciente</valuename>
-    <use_database>N</use_database>
-    <connection/>
-    <schema/>
-    <seqname>SEQ_</seqname>
-    <use_counter>Y</use_counter>
-    <counter_name/>
-    <start_at>1</start_at>
-    <increment_by>1</increment_by>
-    <max_value>999999999</max_value>
+    <fields>
+      <field>
+        <name>origen</name>
+        <type>String</type>
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
+        <nullif>LPD</nullif>
+        <length>5</length>
+        <precision>-1</precision>
+        <set_empty_string>N</set_empty_string>
+      </field>
+    </fields>
     <attributes/>
     <cluster_schema/>
     <remotesteps>
@@ -1397,13 +1501,410 @@
       </output>
     </remotesteps>
     <GUI>
-      <xloc>1104</xloc>
-      <yloc>144</yloc>
+      <xloc>368</xloc>
+      <yloc>496</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
   <step>
-    <name>Cargar integrada</name>
+    <name>Unir datasets</name>
+    <type>Append</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <head_name>Origen ILPD</head_name>
+    <tail_name>Origen LPD</tail_name>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>848</xloc>
+      <yloc>272</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Ordenar A</name>
+    <type>SortRows</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <directory>%%java.io.tmpdir%%</directory>
+    <prefix>out</prefix>
+    <sort_size>1000000</sort_size>
+    <free_memory/>
+    <compress>N</compress>
+    <compress_variable/>
+    <unique_rows>N</unique_rows>
+    <fields>
+      <field>
+        <name>edad</name>
+        <ascending>Y</ascending>
+        <case_sensitive>N</case_sensitive>
+        <collator_enabled>N</collator_enabled>
+        <collator_strength>0</collator_strength>
+        <presorted>N</presorted>
+      </field>
+      <field>
+        <name>genero</name>
+        <ascending>Y</ascending>
+        <case_sensitive>N</case_sensitive>
+        <collator_enabled>N</collator_enabled>
+        <collator_strength>0</collator_strength>
+        <presorted>N</presorted>
+      </field>
+      <field>
+        <name>bilirrubina_total</name>
+        <ascending>Y</ascending>
+        <case_sensitive>N</case_sensitive>
+        <collator_enabled>N</collator_enabled>
+        <collator_strength>0</collator_strength>
+        <presorted>N</presorted>
+      </field>
+      <field>
+        <name>bilirrubina_directa</name>
+        <ascending>Y</ascending>
+        <case_sensitive>N</case_sensitive>
+        <collator_enabled>N</collator_enabled>
+        <collator_strength>0</collator_strength>
+        <presorted>N</presorted>
+      </field>
+      <field>
+        <name>fosfatasa_alcalina</name>
+        <ascending>Y</ascending>
+        <case_sensitive>N</case_sensitive>
+        <collator_enabled>N</collator_enabled>
+        <collator_strength>0</collator_strength>
+        <presorted>N</presorted>
+      </field>
+      <field>
+        <name>alt_sgpt</name>
+        <ascending>Y</ascending>
+        <case_sensitive>N</case_sensitive>
+        <collator_enabled>N</collator_enabled>
+        <collator_strength>0</collator_strength>
+        <presorted>N</presorted>
+      </field>
+      <field>
+        <name>ast_sgot</name>
+        <ascending>Y</ascending>
+        <case_sensitive>N</case_sensitive>
+        <collator_enabled>N</collator_enabled>
+        <collator_strength>0</collator_strength>
+        <presorted>N</presorted>
+      </field>
+      <field>
+        <name>proteinas_totales</name>
+        <ascending>Y</ascending>
+        <case_sensitive>N</case_sensitive>
+        <collator_enabled>N</collator_enabled>
+        <collator_strength>0</collator_strength>
+        <presorted>N</presorted>
+      </field>
+      <field>
+        <name>albumina</name>
+        <ascending>Y</ascending>
+        <case_sensitive>N</case_sensitive>
+        <collator_enabled>N</collator_enabled>
+        <collator_strength>0</collator_strength>
+        <presorted>N</presorted>
+      </field>
+      <field>
+        <name>relacion_a_g</name>
+        <ascending>Y</ascending>
+        <case_sensitive>N</case_sensitive>
+        <collator_enabled>N</collator_enabled>
+        <collator_strength>0</collator_strength>
+        <presorted>N</presorted>
+      </field>
+      <field>
+        <name>diagnostico</name>
+        <ascending>Y</ascending>
+        <case_sensitive>N</case_sensitive>
+        <collator_enabled>N</collator_enabled>
+        <collator_strength>0</collator_strength>
+        <presorted>N</presorted>
+      </field>
+    </fields>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>144</xloc>
+      <yloc>192</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Ordenar B</name>
+    <type>SortRows</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <directory>%%java.io.tmpdir%%</directory>
+    <prefix>out</prefix>
+    <sort_size>1000000</sort_size>
+    <free_memory/>
+    <compress>N</compress>
+    <compress_variable/>
+    <unique_rows>N</unique_rows>
+    <fields>
+      <field>
+        <name>edad</name>
+        <ascending>Y</ascending>
+        <case_sensitive>N</case_sensitive>
+        <collator_enabled>N</collator_enabled>
+        <collator_strength>0</collator_strength>
+        <presorted>N</presorted>
+      </field>
+      <field>
+        <name>genero</name>
+        <ascending>Y</ascending>
+        <case_sensitive>N</case_sensitive>
+        <collator_enabled>N</collator_enabled>
+        <collator_strength>0</collator_strength>
+        <presorted>N</presorted>
+      </field>
+      <field>
+        <name>bilirrubina_total</name>
+        <ascending>Y</ascending>
+        <case_sensitive>N</case_sensitive>
+        <collator_enabled>N</collator_enabled>
+        <collator_strength>0</collator_strength>
+        <presorted>N</presorted>
+      </field>
+      <field>
+        <name>bilirrubina_directa</name>
+        <ascending>Y</ascending>
+        <case_sensitive>N</case_sensitive>
+        <collator_enabled>N</collator_enabled>
+        <collator_strength>0</collator_strength>
+        <presorted>N</presorted>
+      </field>
+      <field>
+        <name>fosfatasa_alcalina</name>
+        <ascending>Y</ascending>
+        <case_sensitive>N</case_sensitive>
+        <collator_enabled>N</collator_enabled>
+        <collator_strength>0</collator_strength>
+        <presorted>N</presorted>
+      </field>
+      <field>
+        <name>alt_sgpt</name>
+        <ascending>Y</ascending>
+        <case_sensitive>N</case_sensitive>
+        <collator_enabled>N</collator_enabled>
+        <collator_strength>0</collator_strength>
+        <presorted>N</presorted>
+      </field>
+      <field>
+        <name>ast_sgot</name>
+        <ascending>Y</ascending>
+        <case_sensitive>N</case_sensitive>
+        <collator_enabled>N</collator_enabled>
+        <collator_strength>0</collator_strength>
+        <presorted>N</presorted>
+      </field>
+      <field>
+        <name>proteinas_totales</name>
+        <ascending>Y</ascending>
+        <case_sensitive>N</case_sensitive>
+        <collator_enabled>N</collator_enabled>
+        <collator_strength>0</collator_strength>
+        <presorted>N</presorted>
+      </field>
+      <field>
+        <name>albumina</name>
+        <ascending>Y</ascending>
+        <case_sensitive>N</case_sensitive>
+        <collator_enabled>N</collator_enabled>
+        <collator_strength>0</collator_strength>
+        <presorted>N</presorted>
+      </field>
+      <field>
+        <name>relacion_a_g</name>
+        <ascending>Y</ascending>
+        <case_sensitive>N</case_sensitive>
+        <collator_enabled>N</collator_enabled>
+        <collator_strength>0</collator_strength>
+        <presorted>N</presorted>
+      </field>
+      <field>
+        <name>diagnostico</name>
+        <ascending>Y</ascending>
+        <case_sensitive>N</case_sensitive>
+        <collator_enabled>N</collator_enabled>
+        <collator_strength>0</collator_strength>
+        <presorted>N</presorted>
+      </field>
+    </fields>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>144</xloc>
+      <yloc>320</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Comunes</name>
+    <type>MergeJoin</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <join_type>INNER</join_type>
+    <step1>Ordenar A</step1>
+    <step2>Ordenar B</step2>
+    <keys_1>
+      <key>edad</key>
+      <key>genero</key>
+      <key>bilirrubina_total</key>
+      <key>bilirrubina_directa</key>
+      <key>fosfatasa_alcalina</key>
+      <key>alt_sgpt</key>
+      <key>ast_sgot</key>
+      <key>proteinas_totales</key>
+      <key>albumina</key>
+      <key>relacion_a_g</key>
+      <key>diagnostico</key>
+    </keys_1>
+    <keys_2>
+      <key>edad</key>
+      <key>genero</key>
+      <key>bilirrubina_total</key>
+      <key>bilirrubina_directa</key>
+      <key>fosfatasa_alcalina</key>
+      <key>alt_sgpt</key>
+      <key>ast_sgot</key>
+      <key>proteinas_totales</key>
+      <key>albumina</key>
+      <key>relacion_a_g</key>
+      <key>diagnostico</key>
+    </keys_2>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>336</xloc>
+      <yloc>240</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Quitar campos repetidos</name>
+    <type>SelectValues</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <fields>
+      <field>
+        <name>edad</name>
+        <rename/>
+      </field>
+      <field>
+        <name>genero</name>
+        <rename/>
+      </field>
+      <field>
+        <name>bilirrubina_total</name>
+        <rename/>
+      </field>
+      <field>
+        <name>bilirrubina_directa</name>
+        <rename/>
+      </field>
+      <field>
+        <name>fosfatasa_alcalina</name>
+        <rename/>
+      </field>
+      <field>
+        <name>alt_sgpt</name>
+        <rename/>
+      </field>
+      <field>
+        <name>ast_sgot</name>
+        <rename/>
+      </field>
+      <field>
+        <name>proteinas_totales</name>
+        <rename/>
+      </field>
+      <field>
+        <name>albumina</name>
+        <rename/>
+      </field>
+      <field>
+        <name>relacion_a_g</name>
+        <rename/>
+      </field>
+      <field>
+        <name>diagnostico</name>
+        <rename/>
+      </field>
+      <select_unspecified>N</select_unspecified>
+    </fields>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>496</xloc>
+      <yloc>192</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Cargar tabla_comunes</name>
     <type>TableOutput</type>
     <description/>
     <distribute>Y</distribute>
@@ -1415,7 +1916,7 @@
     </partitioning>
     <connection>conection-mineria-untrm-bd</connection>
     <schema>public</schema>
-    <table>tabla_enfermedades_integrada</table>
+    <table>tabla_comunes</table>
     <commit>1000</commit>
     <truncate>Y</truncate>
     <ignore_errors>N</ignore_errors>
@@ -1475,14 +1976,6 @@
         <column_name>diagnostico</column_name>
         <stream_name>diagnostico</stream_name>
       </field>
-      <field>
-        <column_name>origen</column_name>
-        <stream_name>origen</stream_name>
-      </field>
-      <field>
-        <column_name>id_paciente</column_name>
-        <stream_name>id_paciente</stream_name>
-      </field>
     </fields>
     <attributes/>
     <cluster_schema/>
@@ -1493,8 +1986,8 @@
       </output>
     </remotesteps>
     <GUI>
-      <xloc>1280</xloc>
-      <yloc>144</yloc>
+      <xloc>512</xloc>
+      <yloc>352</yloc>
       <draw>Y</draw>
     </GUI>
   </step>

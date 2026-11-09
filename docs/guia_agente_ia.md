@@ -16,7 +16,8 @@ Este archivo da a un asistente de IA (Claude, Copilot, ChatGPT, etc.) **todo el 
 | T1 `t1_ilpd.ktr` (dataset 1, completo) | Integrante 1 | **Hecho** (583 → 570 filas) |
 | T2 `t2_lpd.ktr`: CSV file input y Staging stg_lpd | Integrante 1 | **Hecho** |
 | T2 `t2_lpd.ktr`: desde **Renombrar campos** hasta el final | Integrante 2 | **Hecho** (30 691 → 18 539; E=0) |
-| T3 `t3_integracion.ktr` | Integrante 3 | Pendiente (sección 9) |
+| T3 `t3_integracion.ktr`: rama de integración (pasos 1 a 9) | Integrante 1 | **Hecho** (19 109 → 18 554; E=0) |
+| T3 `t3_integracion.ktr`: rama de comunes (pasos 10 a 14) e Insert/Update | Integrante 3 | **Pendiente, continuar aquí** (sección 9.3) |
 | Job `job_etl.kjb` | Integrante 4 | Pendiente (sección 10) |
 | Consultas de verificación y capturas finales | Todos | Pendiente (sección 11) |
 | Informe (carátula y 5 preguntas) | Todos | Pendiente (sección 13) |
@@ -24,6 +25,8 @@ Este archivo da a un asistente de IA (Claude, Copilot, ChatGPT, etc.) **todo el 
 **Orden obligatorio:** T2 debe estar terminado antes de T3, porque T3 lee `tabla_enfermedades_1`. El job necesita T1, T2 y T3.
 
 **Cada parte se trabaja en su propia rama de Git y se integra a `main` con un Pull Request** (ramas `t2-lpd`, `t3-integracion` y `job-etl`; detalle en la sección 3).
+
+**Punto actual:** T3 está a medias **en `main`** (rama de integración hecha y verificada). El Integrante 3 crea la rama `t3-integracion` **desde `main` actualizado** y continúa ahí. Instrucciones exactas en la sección 9.0.
 
 ---
 
@@ -67,7 +70,7 @@ Cada integrante trabaja en su propia PC con su propio PostgreSQL. Las tablas **n
 
 | Herramienta | Versión usada por el grupo |
 |---|---|
-| Pentaho Data Integration | 11.0 (`Spoon.bat`) |
+| Pentaho Data Integration | **11.0** (`Spoon.bat`). **Todos deben usar la 11**: con la 9.1 los `.ktr` del grupo fallan (ver tabla de problemas). |
 | Java | Temurin JDK 21 (PDI 11 lo soporta) |
 | Driver JDBC | `postgresql-42.7.x.jar` en `data-integration\lib` (**solo uno**) |
 | PostgreSQL | 18, `localhost:5432`, usuario `postgres` |
@@ -105,6 +108,18 @@ uv run etl_modelo.py
 | Error de driver al probar la conexión | Falta el jar o hay dos versiones | Un solo `postgresql-42.x.jar` en `lib` y reiniciar Spoon |
 | `database "mineria_untrm" does not exist` | No se creó la base | Crearla en DBeaver (paso 3) |
 | Valores como `0.9` se leen como `9` | Windows en español usa coma decimal | En Convertir tipos poner **Decimal = `.`** en cada campo Number |
+| PDI 9.1: `NullPointerException at TableOutput.init` | La 9.1 no tiene conexiones globales: el `.ktr` solo guarda el nombre de la conexión y la 9.1 no la encuentra | Instalar **PDI 11** y crear la conexión global con el nombre exacto |
+| `!BaseDatabaseStep.Init.ConnectionMissing!` en un Table output | Ese paso quedó sin conexión asignada (por ejemplo, el `.ktr` se abrió o guardó en otra versión) | `git restore pentaho/<archivo>.ktr`, volver a abrirlo en Spoon y ejecutar. Si persiste, elegir la conexión en el paso **sin hacer commit** y avisar al grupo |
+| `no existe la relación «public.stg_ilpd»` (o cualquier tabla) | No se ejecutó `sql/01_crear_tablas.sql`, o se ejecutó en otra base, o la conexión apunta a otra base | En DBeaver, conectado a **`mineria_untrm`**, ejecutar `01_crear_tablas.sql` con Alt+X. Verificar que la conexión de Spoon tenga Database Name `mineria_untrm` |
+| Para probar se creó una conexión con otro nombre (por ejemplo `conexion_test`) y se asignó a los pasos | Los `.ktr` del repo deben usar `conection-mineria-untrm-bd` | Renombrar la conexión local a `conection-mineria-untrm-bd`, `git restore` del `.ktr` y **no subir** el archivo con otro nombre de conexión |
+
+**Comprobar la conexión de los `.ktr` antes de hacer commit:**
+
+```powershell
+Select-String -Path pentaho\*.ktr -Pattern "<connection>"
+```
+
+Todas las líneas deben decir `<connection>conection-mineria-untrm-bd</connection>`.
 
 ---
 
@@ -123,8 +138,8 @@ dm-trabajo-g2/
 │   └── referencia/                              # PDFs de contexto (no son entregables)
 ├── pentaho/
 │   ├── t1_ilpd.ktr                              # Completo
-│   ├── t2_lpd.ktr                               # Hasta Staging stg_lpd
-│   ├── t3_integracion.ktr                       # Por crear
+│   ├── t2_lpd.ktr                               # Completo
+│   ├── t3_integracion.ktr                       # Rama de integración hecha; falta rama de comunes
 │   └── job_etl.kjb                              # Por crear
 ├── sql/
 │   ├── 01_crear_tablas.sql                      # Tablas del flujo Pentaho
@@ -269,6 +284,8 @@ Estas convenciones evitaron todos los errores en T1:
 10. **Capturas para el informe (20 % de la nota):** después de cada paso, una captura del Preview; al final, una del Step Metrics o Logging. Ponle a cada paso un **Step name** descriptivo (los de las tablas de abajo) para que las capturas se entiendan.
 11. **Avisos que no son errores:** Unique rows muestra "If the incoming data is not sorted..." al pulsar OK. Pulsa **Close**: ya está resuelto con el Sort rows previo.
 12. **Guarda con Ctrl+S después de cada paso.**
+13. **Duplicar un paso:** selecciónalo en el lienzo, **Ctrl+C** y **Ctrl+V**. La copia conserva la configuración; solo cambia lo necesario (nombre, tabla, valor). Se usó para Leer LPD y Origen LPD en T3.
+14. **Preview dentro de un Table input** pide el número de filas: escribe 1000. Los valores de columnas NUMERIC se ven como `460.0` o `152.0`; es normal.
 
 ---
 
@@ -427,11 +444,39 @@ Ordenar A (desde Leer ILPD) ─┐
 Ordenar B (desde Leer LPD) ──┘
 ```
 
-### 9.1 Crear la transformación
+### 9.0 Estado actual y cómo continuar (Integrante 3)
+
+**Hecho por el Integrante 1 (pasos 1 a 9, rama de integración), subido a `main` y verificado con Run y en DBeaver (18 554 filas; ILPD 570, LPD 17 984; id_paciente 1 a 18 554):**
+
+```
+Leer ILPD (I=570) → Origen ILPD (570) ─┐
+                                        ├→ Unir datasets (19 109) → Ordenar para unicos (19 109)
+Leer LPD (I=18539) → Origen LPD (18539)┘   → Eliminar repetidos (W=18 554) → Generar id_paciente (18 554)
+                                           → Cargar integrada (O=18 554, E=0)
+```
+
+**Falta (Integrante 3):** la rama de registros comunes (pasos 10 a 14, sección 9.3), validar todo (9.4) y la demostración de Insert/Update (9.5).
+
+**Cómo traer el trabajo y crear tu rama:** el T3 parcial ya está en `main`, junto con T1 y T2 completos.
+
+```powershell
+git checkout main
+git pull                             # trae T1, T2 y el T3 parcial
+git checkout -b t3-integracion       # tu rama, creada desde main actualizado
+Select-String -Path pentaho\*.ktr -Pattern "<connection>"   # todas deben decir conection-mineria-untrm-bd
+```
+
+Si ya tenías una rama `t3-integracion` creada antes de este `git pull`, no crees otra: entra en ella y trae lo último con `git checkout t3-integracion` y `git merge main`.
+
+Antes de abrir T3 en Spoon, ejecuta **T1 y T2** en tu PC (Run) para que existan `tabla_enfermedades` (570) y `tabla_enfermedades_1` (18 539). Luego abre `pentaho/t3_integracion.ktr`, ejecuta **Run** y comprueba que el log coincida con el diagrama de arriba antes de agregar pasos.
+
+Al terminar: commit y push en `t3-integracion`, y abre el **Pull Request** de `t3-integracion` hacia `main` con los conteos en la descripción.
+
+### 9.1 Crear la transformación (ya hecho)
 
 **File → New → Transformation** y guarda de inmediato como `pentaho/t3_integracion.ktr`.
 
-### 9.2 Rama de integración
+### 9.2 Rama de integración (ya hecha; referencia de la configuración)
 
 **Paso 1: Leer ILPD** (Table input, categoría Input).
 
@@ -480,38 +525,82 @@ FROM tabla_enfermedades
 
 - Table `tabla_enfermedades_integrada`, Truncate, commit 1000, batch update, **Specify database fields**.
 - Database fields → Get fields: 13 campos (`edad` … `diagnostico`, `origen`, `id_paciente`). Los nombres coinciden con la tabla.
-- Pulsa Run (al final de 9.3 se ejecuta todo junto).
 
-### 9.3 Rama de registros comunes
+**Resultado verificado (Integrante 1):** Unir datasets W=19 109; Eliminar repetidos R=19 109, W=18 554; Generar id_paciente 18 554; Cargar integrada O=18 554; E=0 en todos.
 
-**Paso 10: Ordenar A** (Sort rows). Conéctalo desde **Leer ILPD** con Main output → aparecerá el aviso → **Copy**. Get Fields → los 11 campos, Ascending `Y`. **No cambies el orden de los campos.**
+Consultas de control en DBeaver (captura para el informe):
 
-**Paso 11: Ordenar B** (Sort rows). Desde **Leer LPD** → **Copy**. Igual que Ordenar A, mismo orden de campos.
+```sql
+SELECT COUNT(*) FROM tabla_enfermedades_integrada;                -- 18554
+SELECT origen, COUNT(*) FROM tabla_enfermedades_integrada
+GROUP BY origen ORDER BY origen;                                  -- ILPD 570, LPD 17984
+SELECT MIN(id_paciente), MAX(id_paciente) FROM tabla_enfermedades_integrada;  -- 1 y 18554
+```
 
-**Paso 12: Comunes** (Merge join, categoría Joins). Conecta Ordenar A y Ordenar B hacia este paso.
+Si ILPD sale con 570, los registros comunes conservaron la fila de ILPD (igual que en Python).
 
-- **First step:** `Ordenar A`. **Second step:** `Ordenar B`. **Join type:** `INNER`.
-- **Keys for 1st step:** botón **Get key fields** → 11 campos. **Keys for 2nd step:** **Get key fields** → 11 campos. Las dos listas deben tener **el mismo orden** (edad, genero, … diagnostico).
-- Merge join exige que ambas entradas estén ordenadas por las claves; por eso van Ordenar A y B.
+### 9.3 Rama de registros comunes (PENDIENTE: Integrante 3 empieza aquí)
 
-**Paso 13: Quitar campos repetidos** (Select values). Desde Comunes.
+Esta rama sale **otra vez** de Leer ILPD y Leer LPD (antes de Add constants, así que **no** lleva `origen`) y busca las filas idénticas en ambos datasets. Hazla **un paso a la vez**, con captura de la ventana antes de pulsar OK.
 
-- Merge join entrega 22 campos: los 11 de A y los 11 de B renombrados con sufijo `_1` (`edad_1`, `genero_1`…).
-- Pestaña **Select & Alter** → **Get fields to select** → **borra las 11 filas que terminan en `_1`**. Quedan las 11 originales.
+**Paso 10: Ordenar A** (Sort rows, categoría Transform).
 
-**Paso 14: Cargar tabla_comunes** (Table output). Table `tabla_comunes`, Truncate, commit 1000, batch update. Specify database fields → Get fields → 11 campos.
+1. Arrastra un **Sort rows** debajo de Leer ILPD.
+2. Conéctalo desde **Leer ILPD** con Shift + arrastrar → **Main output of step**.
+3. Como Leer ILPD ya tiene una salida (hacia Origen ILPD), aparece el aviso "Distribute / Copy" → **Copy**. Con Distribute, cada rama recibiría solo la mitad de las filas.
+4. Doble clic: Step name `Ordenar A`. Pulsa **Get Fields** → deben salir **11 campos** (edad … diagnostico, sin `origen`), todos Ascending `Y`. **No toques los encabezados de columna.** "Only pass unique rows" desmarcado.
+5. OK y Ctrl+S.
+
+**Paso 11: Ordenar B** (Sort rows).
+
+1. Copia **Ordenar A** (Ctrl+C, Ctrl+V) y renómbralo `Ordenar B`.
+2. Conéctalo desde **Leer LPD** → Main output → aviso → **Copy**.
+3. Revisa que tenga los mismos 11 campos, **en el mismo orden** que Ordenar A.
+4. OK y Ctrl+S.
+
+**Paso 12: Comunes** (Merge join, categoría Joins).
+
+1. Arrastra un **Merge join** a la derecha de Ordenar A y Ordenar B.
+2. Conecta **Ordenar A → Merge join** y **Ordenar B → Merge join** (Main output en ambos).
+3. Doble clic y configura:
+   - **Step name:** `Comunes`
+   - **First step:** `Ordenar A`
+   - **Second step:** `Ordenar B`
+   - **Join type:** `INNER` (solo las filas que existen en ambos)
+   - **Keys for 1st step:** botón **Get key fields** → 11 campos (edad … diagnostico).
+   - **Keys for 2nd step:** botón **Get key fields** → 11 campos.
+4. Revisa que las **dos listas de claves tengan el mismo orden**, fila por fila. Si una lista trae campos de más o en otro orden, borra y vuelve a usar Get key fields.
+5. OK y Ctrl+S. Si aparece un aviso de que las entradas deben estar ordenadas, pulsa Close/OK: ya lo están por Ordenar A y B.
+
+**Paso 13: Quitar campos repetidos** (Select values, categoría Transform).
+
+1. Conéctalo desde **Comunes** (Main output).
+2. Merge join entrega **22 campos**: los 11 de A y los 11 de B renombrados con sufijo `_1` (`edad_1`, `genero_1`, … `diagnostico_1`).
+3. Doble clic: Step name `Quitar campos repetidos`. Pestaña **Select & Alter** → **Get fields to select** → aparecen 22 filas.
+4. **Borra las 11 filas que terminan en `_1`** (selecciónalas con Ctrl+clic y pulsa Supr). Deben quedar las 11 originales, en orden. **Include unspecified fields** desmarcado.
+5. OK, Ctrl+S. Preview (Quick Launch): 555 filas, 11 columnas. Captura.
+
+**Paso 14: Cargar tabla_comunes** (Table output, categoría Output).
+
+1. Conéctalo desde **Quitar campos repetidos**.
+2. Configura: Step name `Cargar tabla_comunes`; Connection `conection-mineria-untrm-bd`; schema `public`; table `tabla_comunes`; commit 1000; **Truncate table**; **Use batch update**; **Specify database fields**.
+3. Pestaña Database fields → **Get fields** → deben ser **11 campos** (sin `_1`, sin `origen`, sin `id_paciente`).
+4. OK y Ctrl+S.
 
 ### 9.4 Ejecutar y validar T3
 
-Ctrl+S y **Run**. Esperado en Step Metrics:
+Ctrl+S y **Run** (se ejecutan las dos ramas juntas). Esperado en Step Metrics:
 
 | Paso | Valor esperado |
 |---|---|
 | Leer ILPD / Leer LPD | 570 / 18 539 |
+| Leer ILPD / Leer LPD (W, por el Copy) | 1 140 / 37 078 |
 | Unir datasets | W = 19 109 |
 | Eliminar repetidos | W = 18 554 |
 | Cargar integrada | O = 18 554 |
+| Ordenar A / Ordenar B | 570 / 18 539 |
 | Comunes | W = 555 |
+| Quitar campos repetidos | W = 555 |
 | Cargar tabla_comunes | O = 555 |
 | Todos | E = 0 |
 
@@ -531,6 +620,7 @@ Los 555 comunes salen de los 570 del dataset 1; los otros 15 no están en el dat
 
 - Integrada con 19 109: `origen` quedó en Fields to compare de Unique rows.
 - Comunes con 0: las claves del Merge join están en distinto orden, o Ordenar A/B no ordenan por las 11 columnas en el mismo orden.
+- Integrada u Origen con la mitad de filas: al conectar Ordenar A u Ordenar B se eligió **Distribute** en vez de **Copy**. Borra el hop y vuelve a conectarlo eligiendo Copy.
 - Error al cargar comunes: quedaron campos `_1` en Quitar campos repetidos.
 
 ### 9.5 Actividad 8: Insert/Update (demostración)
@@ -543,7 +633,7 @@ La guía pide mostrar la diferencia entre Table output (carga completa) e **Inse
 
 No dejes Insert/Update conectado en el `t3_integracion.ktr` que usa el job.
 
-Commit y push de `t3_integracion.ktr`; avisa al Integrante 4.
+Commit y push de `t3_integracion.ktr` en la rama `t3-integracion`, abre el Pull Request hacia `main` y avisa al Integrante 4.
 
 ---
 

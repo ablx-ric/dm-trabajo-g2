@@ -18,16 +18,16 @@ Este archivo da a un asistente de IA (Claude, Copilot, ChatGPT, etc.) **todo el 
 | T2 `t2_lpd.ktr`: desde **Renombrar campos** hasta el final | Integrante 2 | **Hecho** (30 691 → 18 539; E=0) |
 | T3 `t3_integracion.ktr`: rama de integración (pasos 1 a 9) | Integrante 1 | **Hecho** (19 109 → 18 554; E=0) |
 | T3 `t3_integracion.ktr`: rama de comunes (pasos 10 a 14) | Integrante 3 | **Hecho** (18 554 integrada, 555 comunes; E=0; revisado el `.ktr`) |
-| Demostración Insert/Update (actividad 8, sección 9.5) | Por asignar | **Pendiente**: no está en `t3_integracion.ktr` |
+| Demostración Insert/Update (actividad 8, sección 9.5) | Integrante 1 | **Hecho** en `t3_insert_update.ktr` (I=18 554, O=0, U=2, E=0; tabla sigue en 18 554) |
 | Job `job_etl.kjb` | Integrante 4 | **Hecho** (T1→T2→T3 con hops condicionales; 570 / 18 539 / 18 554 / 555; E=0; revisado el `.kjb`) |
-| Consultas de verificación y capturas finales | Todos | Pendiente (sección 11) |
-| Informe (carátula y 5 preguntas) | Todos | Pendiente (sección 13) |
+| Consultas de verificación (A a D) | Integrante 1 | **Hecho** (A: conteos iguales en Pentaho y Python; D: 0 filas) |
+| Informe (carátula, actividades y 5 preguntas) | Todos | **En curso** (sección 13). Actividad 8 ya redactada con capturas |
 
 **Orden obligatorio:** T2 debe estar terminado antes de T3, porque T3 lee `tabla_enfermedades_1`. El job necesita T1, T2 y T3.
 
 **Cada parte se trabaja en su propia rama de Git y se integra a `main` con un Pull Request** (ramas `t2-lpd`, `t3-integracion` y `job-etl`; detalle en la sección 3).
 
-**Punto actual:** T1, T2, T3 y el job están **completos y fusionados en `main`** (job: T1→T2→T3 con hops condicionales, conteos 570 / 18 539 / 18 554 / 555, E=0). Queda pendiente aparte la demostración de Insert/Update (sección 9.5), las consultas de verificación con capturas (sección 11) y el informe (sección 13).
+**Punto actual:** **toda la parte técnica está terminada**: T1, T2, T3, el job, la demostración de Insert/Update y la verificación final (A a D). El job ejecuta todo el ETL en unos 7 segundos con E=0. **Solo falta el informe** (sección 13).
 
 ---
 
@@ -140,8 +140,9 @@ dm-trabajo-g2/
 ├── pentaho/
 │   ├── t1_ilpd.ktr                              # Completo
 │   ├── t2_lpd.ktr                               # Completo
-│   ├── t3_integracion.ktr                       # Completo (integración + comunes)
-│   └── job_etl.kjb                              # Por crear
+│   ├── t3_integracion.ktr                       # Completo (integración + comunes); lo usa el job
+│   ├── t3_insert_update.ktr                     # Demostración Insert/Update (actividad 8); NO lo usa el job
+│   └── job_etl.kjb                              # Completo (T1 → T2 → T3)
 ├── sql/
 │   ├── 01_crear_tablas.sql                      # Tablas del flujo Pentaho
 │   └── 02_verificacion.sql                      # Conteos y comparaciones
@@ -626,19 +627,53 @@ Los 555 comunes salen de los 570 del dataset 1; los otros 15 no están en el dat
 - Integrada u Origen con la mitad de filas: al conectar Ordenar A u Ordenar B se eligió **Distribute** en vez de **Copy**. Borra el hop y vuelve a conectarlo eligiendo Copy.
 - Error al cargar comunes: quedaron campos `_1` en Quitar campos repetidos.
 
-### 9.5 Actividad 8: Insert/Update (demostración) — PENDIENTE
+### 9.5 Actividad 8: Insert/Update (demostración): HECHO
 
-Hazla en un archivo **aparte**, `pentaho/t3_insert_update.ktr`, para no tocar el `t3_integracion.ktr` que usa el job.
+Se hizo en un archivo **aparte**, `pentaho/t3_insert_update.ktr`, para no tocar el `t3_integracion.ktr` que usa el job. **El job no ejecuta este archivo.**
 
-La guía pide mostrar la diferencia entre Table output (carga completa) e **Insert/Update** (recarga sin duplicar). Para la captura:
+**Cómo se construyó:**
 
-1. Arrastra un **Insert / Update** (categoría Output) **sin conectarlo al flujo principal**, o haz una copia de T3 aparte (`t3_insert_update.ktr`) donde reemplazas Cargar integrada por Insert/Update.
-2. Configuración: tabla `tabla_enfermedades_integrada`; **The key(s) to look up the value(s)**: los 10 campos clínicos (`edad`, `genero`, `bilirrubina_total` … `relacion_a_g`), comparator `=`; **Update fields**: `diagnostico` con Update = `Y` y el resto con `N`.
-3. Al ejecutarlo sobre la tabla ya cargada no debe insertar filas nuevas (la tabla sigue en 18 554). Captura del paso y del conteo.
+1. `t3_integracion.ktr` → **File → Save as** → `t3_insert_update.ktr`.
+2. Se borraron la rama de comunes (Ordenar A, Ordenar B, Comunes, Quitar campos repetidos, Cargar tabla_comunes) y **Cargar integrada**. Queda: Leer ILPD / Leer LPD → Origen → Unir datasets → Ordenar para unicos → Eliminar repetidos → Generar id_paciente.
+3. Se agregó **Insert / Update** (categoría Output) desde Generar id_paciente:
+   - Step name `Recarga Insert/Update`; conexión `conection-mineria-untrm-bd`; schema `public`; tabla `tabla_enfermedades_integrada`; commit 1000; "Don't perform any updates" desmarcado.
+   - **The key(s) to look up the value(s):** Get fields y se borraron `diagnostico`, `origen` e `id_paciente` → quedan las **10 variables clínicas** con comparator `=`.
+   - **Update fields:** Get update fields → 13 campos; **Update = `Y` solo en `diagnostico`**, el resto `N`.
+   - No se usó el botón SQL.
 
-No dejes Insert/Update conectado en el `t3_integracion.ktr` que usa el job.
+**Resultado (ejecutado sobre la tabla ya cargada con 18 554 filas):**
 
-Commit y push de `t3_insert_update.ktr` en su propia rama (por ejemplo `insert-update`) y Pull Request hacia `main`.
+| Indicador | Valor | Significado |
+|---|---|---|
+| I / R | 18 554 | Filas buscadas en la tabla |
+| **O** | **0** | **Ninguna fila insertada: todas ya existían → la recarga no duplica** |
+| **U** | **2** | Diagnósticos actualizados (ver abajo) |
+| E | 0 | Sin errores |
+| `COUNT(*)` después | 18 554 | Sin duplicados |
+
+Tardó unos **55 s** (frente a menos de 1 s de Table output): hace una consulta por fila y la tabla no tiene índice sobre las 10 claves. Un índice lo aceleraría:
+
+```sql
+CREATE INDEX IF NOT EXISTS idx_integrada_claves ON tabla_enfermedades_integrada
+(edad, genero, bilirrubina_total, bilirrubina_directa, fosfatasa_alcalina,
+ alt_sgpt, ast_sgot, proteinas_totales, albumina, relacion_a_g);
+```
+
+**Por qué U = 2:** en la tabla integrada hay **2 pares de pacientes con los 10 valores clínicos idénticos y diagnóstico distinto** (0 y 1). Insert/Update los trata como el mismo paciente y sobrescribe el diagnóstico. Es un **hallazgo de calidad de datos** (mismas analíticas, distinta etiqueta) que conviene mencionar en el informe. Se ven con:
+
+```sql
+SELECT edad, genero, bilirrubina_total, bilirrubina_directa, fosfatasa_alcalina,
+       alt_sgpt, ast_sgot, proteinas_totales, albumina, relacion_a_g,
+       COUNT(*) AS filas, STRING_AGG(diagnostico::text, ', ') AS diagnosticos
+FROM tabla_enfermedades_integrada
+GROUP BY 1,2,3,4,5,6,7,8,9,10
+HAVING COUNT(*) > 1;
+-- 2 filas, cada una con filas = 2 y diagnosticos = 0, 1
+```
+
+**Después de la demostración hay que restaurar la tabla:** ejecutar el job (o T3) una vez; Table output la vacía y la recarga exacta. Si la consulta anterior muestra `0, 1` en ambos pares, la tabla está restaurada.
+
+**Capturas en el informe (actividad 8):** log de `t3_insert_update` (O=0, U=2), conteo 18 554 en DBeaver y la consulta de los 2 pares.
 
 ---
 
@@ -776,6 +811,17 @@ Ejecuta en DBeaver, conectado a `mineria_untrm`, después del job:
 
 Captura de cada consulta para el informe.
 
+**Resultado obtenido (HECHO, después de ejecutar el job):**
+
+| Consulta | Resultado |
+|---|---|
+| A | Pentaho: 570 / 18 539 / 18 554 / 555. Python: 570 / 18 539 / 18 554 / 555. **Idénticos** |
+| B | 0 → 5 299 (28,6 %); 1 → 13 255 (71,4 %). Clases desbalanceadas → por eso `class_weight="balanced"` |
+| C | Acierto en los 555 comunes: modelo ILPD 0,71; modelo integrado 1,00 → evidencia de fuga |
+| D | **0 filas**: el dataset 1 limpio es idéntico fila por fila en PDI y Python |
+
+**Ejecución del job (final):** T1 → T2 → T3 → Success, todas con `result=[true]`, E=0, unos 7 segundos en total.
+
 ---
 
 ## 12. Flujo en Python (`etl_modelo.py`): HECHO
@@ -822,6 +868,13 @@ Responder las 5 preguntas de la guía y llenar la carátula (estudiantes, docent
 3. **PDI vs Python.** Las filas finales coinciden (570, 18 539, 18 554, 555) y la consulta D lo confirma. Diferencias posibles a comentar: PDI usa medianas fijas escritas a mano y Python las calcula; PostgreSQL redondea según el tipo NUMERIC y Python usa float64; Python escribe en tablas `_py` con tipos inferidos por pandas.
 4. **Modelo A ~99,7 % vs modelo B ~71 %.** El A está inflado: el dataset 2 contiene muchos registros casi idénticos entre sí y versiones de los del dataset 1, lo que provoca fuga de información entre entrenamiento y prueba. La comprobación de fuga (entrenar con LPD y probar con ILPD da 100 %) lo demuestra. Las métricas de A reflejan memorización. En un entorno clínico se usaría el criterio del modelo B (validación honesta, AUC ~0,73); su recall alto (~0,89) es deseable porque reduce los enfermos no detectados.
 5. **Enfermedad renal.** El flujo es el mismo. Cambian los nombres de columnas y el esquema unificado, las reglas de limpieza (el dataset CKD de UCI usa `?` como nulo y tiene variables categóricas como `htn`, `dm`, `appet`), las medianas, los mapeos de categorías y de la clase (`ckd`/`notckd` → 1/0).
+
+### Otros puntos para el informe
+
+- **Actividad 8 (Table output vs Insert/Update), ya redactada:** Table output hace la carga inicial (Truncate + inserción de 18 554 filas en menos de 1 s). Insert/Update sirve para recargas: busca cada fila por las 10 variables clínicas, inserta si no existe y actualiza solo `diagnostico` si existe. Al reprocesar los mismos datos insertó 0 filas (la tabla siguió en 18 554) y actualizó 2, revelando 2 pares de pacientes con analíticas idénticas y diagnóstico distinto. Es más lento (≈55 s) por hacer una consulta por fila.
+- **El job** orquesta T1 → T2 → T3 con hops "Follow when result is true": si una transformación falla, las siguientes no se ejecutan. Como todas las cargas usan Truncate, puede ejecutarse varias veces sin duplicar datos.
+- **Python no está dentro del job.** La guía del docente lo trata como un flujo aparte ("flujo ETL equivalente en Python", que se ejecuta con `uv run etl_modelo.py`) y el job solo incluye T1 → T2 → T3. **Decisión del grupo:** se deja así. Nota para el informe: el modelo se entrena con la tabla integrada generada por Python, que es idéntica a la de Pentaho (consulta D = 0 filas), así que el resultado sería el mismo entrenando con la de Pentaho.
+- **Calidad de datos:** el dataset 2 tiene 11 248 duplicados exactos (≈38 % de sus 29 787 filas válidas); esa repetición, junto con los registros casi idénticos, explica que el modelo A esté inflado. Además hay 2 pares de pacientes con valores clínicos idénticos y diagnóstico distinto (ruido en la etiqueta).
 
 ---
 

@@ -17,8 +17,9 @@ Este archivo da a un asistente de IA (Claude, Copilot, ChatGPT, etc.) **todo el 
 | T2 `t2_lpd.ktr`: CSV file input y Staging stg_lpd | Integrante 1 | **Hecho** |
 | T2 `t2_lpd.ktr`: desde **Renombrar campos** hasta el final | Integrante 2 | **Hecho** (30 691 → 18 539; E=0) |
 | T3 `t3_integracion.ktr`: rama de integración (pasos 1 a 9) | Integrante 1 | **Hecho** (19 109 → 18 554; E=0) |
-| T3 `t3_integracion.ktr`: rama de comunes (pasos 10 a 14) e Insert/Update | Integrante 3 | **Hecho** (18 554 integrada, 555 comunes; E=0) |
-| Job `job_etl.kjb` | Integrante 4 | Pendiente (sección 10) |
+| T3 `t3_integracion.ktr`: rama de comunes (pasos 10 a 14) | Integrante 3 | **Hecho** (18 554 integrada, 555 comunes; E=0; revisado el `.ktr`) |
+| Demostración Insert/Update (actividad 8, sección 9.5) | Por asignar | **Pendiente**: no está en `t3_integracion.ktr` |
+| Job `job_etl.kjb` | Integrante 4 | **Pendiente, sigue ahora** (sección 10, rama `job-etl`) |
 | Consultas de verificación y capturas finales | Todos | Pendiente (sección 11) |
 | Informe (carátula y 5 preguntas) | Todos | Pendiente (sección 13) |
 
@@ -26,7 +27,7 @@ Este archivo da a un asistente de IA (Claude, Copilot, ChatGPT, etc.) **todo el 
 
 **Cada parte se trabaja en su propia rama de Git y se integra a `main` con un Pull Request** (ramas `t2-lpd`, `t3-integracion` y `job-etl`; detalle en la sección 3).
 
-**Punto actual:** T3 está **completo** en la rama `t3-integracion` (integración 18 554 + comunes 555, verificadas con Run y en DBeaver). Sigue el Integrante 4 con el job (sección 10), creando la rama `job-etl` desde `main` actualizado.
+**Punto actual:** T1, T2 y T3 están **completos y fusionados en `main`** (T3: integración 18 554 + comunes 555, verificadas con Run y en DBeaver; hop duplicado Leer LPD → Origen LPD eliminado y revalidado). Sigue el Integrante 4 con el job (sección 10), creando la rama `job-etl` desde `main` actualizado. Queda pendiente aparte la demostración de Insert/Update (sección 9.5).
 
 ---
 
@@ -139,7 +140,7 @@ dm-trabajo-g2/
 ├── pentaho/
 │   ├── t1_ilpd.ktr                              # Completo
 │   ├── t2_lpd.ktr                               # Completo
-│   ├── t3_integracion.ktr                       # Rama de integración hecha; falta rama de comunes
+│   ├── t3_integracion.ktr                       # Completo (integración + comunes)
 │   └── job_etl.kjb                              # Por crear
 ├── sql/
 │   ├── 01_crear_tablas.sql                      # Tablas del flujo Pentaho
@@ -539,7 +540,7 @@ SELECT MIN(id_paciente), MAX(id_paciente) FROM tabla_enfermedades_integrada;  --
 
 Si ILPD sale con 570, los registros comunes conservaron la fila de ILPD (igual que en Python).
 
-### 9.3 Rama de registros comunes (PENDIENTE: Integrante 3 empieza aquí)
+### 9.3 Rama de registros comunes (hecha por el Integrante 3; referencia de la configuración)
 
 Esta rama sale **otra vez** de Leer ILPD y Leer LPD (antes de Add constants, así que **no** lleva `origen`) y busca las filas idénticas en ambos datasets. Hazla **un paso a la vez**, con captura de la ventana antes de pulsar OK.
 
@@ -616,6 +617,8 @@ SELECT MIN(id_paciente), MAX(id_paciente) FROM tabla_enfermedades_integrada;  --
 
 Los 555 comunes salen de los 570 del dataset 1; los otros 15 no están en el dataset 2 o difieren en algún valor.
 
+**Resultado verificado de la versión final (en `main`):** Leer ILPD W=1 140, Leer LPD W=37 078, Unir datasets 19 109, Eliminar repetidos 18 554, Cargar integrada O=18 554, Comunes R=19 109 W=555, Cargar tabla_comunes O=555, E=0 en todos. Desde Leer LPD salen exactamente dos hops (Origen LPD y Ordenar B), ambos con Copy.
+
 **Si algo no coincide:**
 
 - Integrada con 19 109: `origen` quedó en Fields to compare de Unique rows.
@@ -623,7 +626,9 @@ Los 555 comunes salen de los 570 del dataset 1; los otros 15 no están en el dat
 - Integrada u Origen con la mitad de filas: al conectar Ordenar A u Ordenar B se eligió **Distribute** en vez de **Copy**. Borra el hop y vuelve a conectarlo eligiendo Copy.
 - Error al cargar comunes: quedaron campos `_1` en Quitar campos repetidos.
 
-### 9.5 Actividad 8: Insert/Update (demostración)
+### 9.5 Actividad 8: Insert/Update (demostración) — PENDIENTE
+
+Hazla en un archivo **aparte**, `pentaho/t3_insert_update.ktr`, para no tocar el `t3_integracion.ktr` que usa el job.
 
 La guía pide mostrar la diferencia entre Table output (carga completa) e **Insert/Update** (recarga sin duplicar). Para la captura:
 
@@ -633,33 +638,130 @@ La guía pide mostrar la diferencia entre Table output (carga completa) e **Inse
 
 No dejes Insert/Update conectado en el `t3_integracion.ktr` que usa el job.
 
-Commit y push de `t3_integracion.ktr` en la rama `t3-integracion`, abre el Pull Request hacia `main` y avisa al Integrante 4.
+Commit y push de `t3_insert_update.ktr` en su propia rama (por ejemplo `insert-update`) y Pull Request hacia `main`.
 
 ---
 
-## 10. Job (`job_etl.kjb`) (Integrante 4)
+## 10. Job (`job_etl.kjb`) (Integrante 4): PENDIENTE
 
-**Requisito:** `t1_ilpd.ktr`, `t2_lpd.ktr` y `t3_integracion.ktr` completos en `pentaho/`.
+### 10.0 Qué es y qué debe lograr
 
-1. **File → New → Job** y guarda de inmediato como `pentaho/job_etl.kjb` (en la misma carpeta que los `.ktr`).
-2. Desde la categoría **General** arrastra: **Start**, tres **Transformation** y un **Success**.
-3. Configura cada **Transformation** (doble clic):
+Una **transformación** (`.ktr`) mueve y transforma filas. Un **job** (`.kjb`) no toca filas: **orquesta** transformaciones, es decir, decide qué se ejecuta, en qué orden y qué pasa si algo falla. Este job ejecuta T1 → T2 → T3 en cadena y se detiene si alguna falla.
 
-| Entry name | Transformation (ruta) |
+Diagrama objetivo:
+
+```
+Start ──(incondicional)──> T1 ILPD ──(si OK)──> T2 LPD ──(si OK)──> T3 Integracion ──(si OK)──> Success
+```
+
+**Requisitos:**
+
+- `t1_ilpd.ktr`, `t2_lpd.ktr` y `t3_integracion.ktr` ya están completos en `main` y funcionan por separado.
+- En tu PC: PDI 11, la conexión global `conection-mineria-untrm-bd` (sección 2, paso 4) y las tablas creadas con `sql/01_crear_tablas.sql`. No hace falta llenar tablas antes: el job las llena todas.
+- **Antes de empezar, ejecuta T1, T2 y T3 por separado una vez** (Run en cada uno). Si alguno falla solo, también fallará dentro del job; es más fácil corregirlo así.
+
+**Rama de Git:**
+
+```powershell
+git checkout main
+git pull
+git checkout -b job-etl
+Select-String -Path pentaho\*.ktr -Pattern "<connection>"   # todas: conection-mineria-untrm-bd
+```
+
+### 10.1 Crear el job
+
+1. En Spoon: **File → New → Job** (Ctrl+Alt+N). Se abre una pestaña nueva con el lienzo vacío. Comprueba que el ícono de la pestaña es de **job** (no de transformación).
+2. Guarda de inmediato con Ctrl+S como `pentaho\job_etl.kjb`, **en la misma carpeta que los tres `.ktr`**. Esto es obligatorio: las rutas del paso siguiente dependen de esa carpeta.
+
+### 10.2 Agregar las entradas (job entries)
+
+En un job, los elementos del lienzo se llaman **entradas** (job entries), no pasos. En la pestaña **Design**, carpeta **General**, arrastra al lienzo, de izquierda a derecha:
+
+1. **Start** (una sola vez; todo job empieza aquí).
+2. **Transformation** tres veces.
+3. **Success** (marca el final correcto del job).
+
+### 10.3 Configurar cada Transformation
+
+Doble clic en cada entrada Transformation. Arriba aparecen **Entry name** y el campo de la ruta de la transformación (con botón **Browse**).
+
+| Entry name | Transformation (escribir a mano) |
 |---|---|
-| T1 ILPD | `${Internal.Entry.Current.Directory}/t1_ilpd.ktr` |
-| T2 LPD | `${Internal.Entry.Current.Directory}/t2_lpd.ktr` |
-| T3 Integracion | `${Internal.Entry.Current.Directory}/t3_integracion.ktr` |
+| `T1 ILPD` | `${Internal.Entry.Current.Directory}/t1_ilpd.ktr` |
+| `T2 LPD` | `${Internal.Entry.Current.Directory}/t2_lpd.ktr` |
+| `T3 Integracion` | `${Internal.Entry.Current.Directory}/t3_integracion.ktr` |
 
-   En un job, esa variable es la carpeta del `.kjb`, por eso no lleva `../`.
-4. Conecta en cadena con Shift + arrastrar: **Start → T1 ILPD → T2 LPD → T3 Integracion → Success**.
-5. Hops: el de Start queda incondicional (candado), y está bien. En cada uno de los otros tres: clic derecho sobre la flecha → **Evaluation** → **Follow when result is true**. La flecha se vuelve verde con un check. Así el job se detiene si una transformación falla.
-6. Start: no actives Repeat ni programación.
-7. Ctrl+S y **Run**.
-8. Capturas: el diagrama del job con todos los checks verdes, la pestaña **Logging** completa y **Job metrics**.
-9. Valida con `sql/02_verificacion.sql` (sección 11).
+- **Escribe la ruta a mano.** Si usas Browse, Spoon pone la ruta absoluta (`D:/...`) y el job no funcionará en otras PCs. Si ya la pusiste con Browse, reemplaza todo lo anterior a `t1_ilpd.ktr` por `${Internal.Entry.Current.Directory}/`.
+- En un job, `${Internal.Entry.Current.Directory}` es la carpeta del `.kjb`. Como el job y los `.ktr` están en `pentaho/`, **no lleva `../`**.
+- Las demás pestañas (Options, Logging, Arguments, Parameters) se dejan como vienen. **Run configuration** queda en `Pentaho local`.
+- OK en cada una y Ctrl+S.
 
-El job vuelve a cargar todo desde cero cada vez (todas las cargas tienen Truncate), así que puede ejecutarse varias veces sin duplicar datos.
+Truco: configura `T1 ILPD`, cópiala con Ctrl+C / Ctrl+V dos veces y solo cambia el nombre y el archivo.
+
+### 10.4 Conectar las entradas (hops)
+
+Con **Shift + arrastrar**, en este orden:
+
+1. **Start → T1 ILPD**
+2. **T1 ILPD → T2 LPD**
+3. **T2 LPD → T3 Integracion**
+4. **T3 Integracion → Success**
+
+Los hops de un job tienen **condición**, a diferencia de los de una transformación. Se ve por el ícono y el color de la flecha:
+
+| Aspecto de la flecha | Significado | Dónde va |
+|---|---|---|
+| Negra con **candado** | Incondicional: siempre continúa | Solo **Start → T1 ILPD** |
+| **Verde con check** | Follow when result is true: continúa solo si la entrada anterior terminó bien | Los otros tres |
+| Roja con X | Follow when result is false: solo si falló | No usarla en este job |
+
+Revisa cada uno de los tres hops verdes. Si alguno sale negro o rojo: **clic derecho sobre la flecha → Evaluation → Follow when result is true**. Así, si T1 falla, T2 y T3 no se ejecutan y el job termina en error en lugar de cargar datos incompletos.
+
+### 10.5 Revisar Start
+
+Doble clic en **Start**: **Repeat** desmarcado y **Type** = `No Scheduling`. El job se ejecuta una sola vez cuando pulsas Run. OK y Ctrl+S.
+
+### 10.6 Ejecutar y validar
+
+1. Ctrl+S y **Run** (el botón de play). En la ventana de opciones, **Run**.
+2. Tarda unos segundos (T2 es el más lento). Cada entrada se marca con un **check verde** al terminar bien.
+3. Pestaña **Job metrics** (abajo): las tres transformaciones y Success con resultado **Success**.
+4. Pestaña **Logging**: aparecen los logs de las tres transformaciones seguidos. Busca estas líneas y compáralas:
+
+| Línea del log | Esperado |
+|---|---|
+| `Staging stg_ilpd` / `Cargar tabla_enfermedades` | O = 583 / O = 570 |
+| `Staging stg_lpd` / `Cargar tabla_enfermedades_1` | O = 30 691 / O = 18 539 |
+| `Cargar integrada` / `Cargar tabla_comunes` | O = 18 554 / O = 555 |
+| Todas | E = 0 |
+| Final | `Job execution finished` sin `ERROR` |
+
+5. En DBeaver, ejecuta la **consulta A** de `sql/02_verificacion.sql` y comprueba los conteos de la sección 5.
+
+**Capturas para el informe:** el diagrama del job con los cuatro checks verdes, **Job metrics** y el final del **Logging**.
+
+Como todas las cargas tienen **Truncate**, el job vacía y vuelve a llenar las tablas en cada ejecución: puedes ejecutarlo varias veces sin duplicar datos.
+
+### 10.7 Si algo falla
+
+| Síntoma | Causa probable | Solución |
+|---|---|---|
+| `Unable to load the transformation` / `file not found` | Ruta mal escrita o el `.kjb` no está en `pentaho/` | Revisar la ruta de la entrada (sin `../`, nombre exacto del `.ktr`) y dónde se guardó el job |
+| El job se detiene en T1 con error del CSV | `${Internal.Entry.Current.Directory}` apunta a otra carpeta | Comprobar que el `.kjb` está en la misma carpeta que los `.ktr` |
+| Error de conexión o `ConnectionMissing` | Falta la conexión global o tiene otro nombre | Sección 2, paso 4, y tabla de problemas |
+| `no existe la relación ...` | Faltan las tablas | Ejecutar `sql/01_crear_tablas.sql` en `mineria_untrm` |
+| T2 o T3 se ejecutan aunque T1 falló | Hop incondicional en lugar de verde | Evaluation → Follow when result is true |
+
+### 10.8 Terminar
+
+```powershell
+git add pentaho/job_etl.kjb docs/guia_agente_ia.md
+git commit -m "Job: T1 -> T2 -> T3 con hops condicionales"
+git push -u origin job-etl
+```
+
+Abre el **Pull Request** de `job-etl` hacia `main` con los conteos del log en la descripción, y actualiza la sección 0 de esta guía.
 
 ---
 

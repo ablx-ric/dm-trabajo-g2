@@ -15,7 +15,7 @@ Este archivo da a un asistente de IA (Claude, Copilot, ChatGPT, etc.) **todo el 
 | Organización del repo, proyecto uv, SQL y `etl_modelo.py` | Integrante 1 | **Hecho** |
 | T1 `t1_ilpd.ktr` (dataset 1, completo) | Integrante 1 | **Hecho** (583 → 570 filas) |
 | T2 `t2_lpd.ktr`: CSV file input y Staging stg_lpd | Integrante 1 | **Hecho** |
-| T2 `t2_lpd.ktr`: desde **Renombrar campos** hasta el final | Integrante 2 | Pendiente (sección 8.2) |
+| T2 `t2_lpd.ktr`: desde **Renombrar campos** hasta el final | Integrante 2 | **Hecho** (30 691 → 18 539; E=0) |
 | T3 `t3_integracion.ktr` | Integrante 3 | Pendiente (sección 9) |
 | Job `job_etl.kjb` | Integrante 4 | Pendiente (sección 10) |
 | Consultas de verificación y capturas finales | Todos | Pendiente (sección 11) |
@@ -314,7 +314,7 @@ T2 se creó con **File → Save as** desde T1, así que ya tiene **todos los pas
 - **CSV file input:** Filename `${Internal.Entry.Current.Directory}/../data/Liver_Patient_Dataset__LPD__train.csv`, encoding **ISO-8859-1**, Lazy conversion desmarcado, Get Fields con los 11 campos en String y orden 1 a 11 (Age of the patient … Result).
 - **Staging stg_lpd:** table `stg_lpd`, mapeo por posición `Age of the patient→age` … `Result→dataset`.
 
-### 8.2 Pendiente (Integrante 2): paso a paso
+### 8.2 Completado (Integrante 2): paso a paso
 
 Abre `pentaho/t2_lpd.ktr` (después de `git pull`). Revisa primero que la pestaña diga **t2_lpd** y no t1_ilpd.
 

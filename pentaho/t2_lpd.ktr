@@ -8,7 +8,7 @@
     <trans_type>Normal</trans_type>
     <trans_status>0</trans_status>
     <directory>/</directory>
-    <filename>D:\03_projects\dm-trabajo-g2\pentaho\t2_lpd.ktr</filename>
+    <filename>file:///C:/Users/davis/Desktop/CICLO V/Computación en la Nube/UNI II/Trabajo/dm-trabajo-g2/pentaho/t2_lpd.ktr</filename>
     <parameters>
     </parameters>
     <log>
@@ -494,7 +494,7 @@
     </hop>
     <hop>
       <from>Eliminar duplicados</from>
-      <to>Cargar tabla_enfermedades</to>
+      <to>Cargar tabla_enfermedades_1</to>
       <enabled>Y</enabled>
     </hop>
   </order>
@@ -525,6 +525,17 @@
     <encoding>ISO-8859-1</encoding>
     <fields>
       <field>
+        <name>Age of the patient</name>
+        <type>String</type>
+        <format/>
+        <currency>$</currency>
+        <decimal>.</decimal>
+        <group>,</group>
+        <length>-1</length>
+        <precision>-1</precision>
+        <trim_type>none</trim_type>
+      </field>
+      <field>
         <name>Gender of the patient</name>
         <type>String</type>
         <format/>
@@ -536,7 +547,18 @@
         <trim_type>none</trim_type>
       </field>
       <field>
-        <name>Age of the patient</name>
+        <name>Total Bilirubin</name>
+        <type>String</type>
+        <format/>
+        <currency>$</currency>
+        <decimal>.</decimal>
+        <group>,</group>
+        <length>-1</length>
+        <precision>-1</precision>
+        <trim_type>none</trim_type>
+      </field>
+      <field>
+        <name>Direct Bilirubin</name>
         <type>String</type>
         <format/>
         <currency>$</currency>
@@ -580,39 +602,6 @@
         <trim_type>none</trim_type>
       </field>
       <field>
-        <name>Result</name>
-        <type>String</type>
-        <format/>
-        <currency>$</currency>
-        <decimal>.</decimal>
-        <group>,</group>
-        <length>-1</length>
-        <precision>-1</precision>
-        <trim_type>none</trim_type>
-      </field>
-      <field>
-        <name>Total Bilirubin</name>
-        <type>String</type>
-        <format/>
-        <currency>$</currency>
-        <decimal>.</decimal>
-        <group>,</group>
-        <length>-1</length>
-        <precision>-1</precision>
-        <trim_type>none</trim_type>
-      </field>
-      <field>
-        <name>Direct Bilirubin</name>
-        <type>String</type>
-        <format/>
-        <currency>$</currency>
-        <decimal>.</decimal>
-        <group>,</group>
-        <length>-1</length>
-        <precision>-1</precision>
-        <trim_type>none</trim_type>
-      </field>
-      <field>
         <name>Total Protiens</name>
         <type>String</type>
         <format/>
@@ -645,6 +634,17 @@
         <precision>-1</precision>
         <trim_type>none</trim_type>
       </field>
+      <field>
+        <name>Result</name>
+        <type>String</type>
+        <format/>
+        <currency>$</currency>
+        <decimal>.</decimal>
+        <group>,</group>
+        <length>-1</length>
+        <precision>-1</precision>
+        <trim_type>none</trim_type>
+      </field>
     </fields>
     <attributes/>
     <cluster_schema/>
@@ -661,79 +661,7 @@
     </GUI>
   </step>
   <step>
-    <name>Renombrar campos</name>
-    <type>SelectValues</type>
-    <description/>
-    <distribute>Y</distribute>
-    <custom_distribution/>
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name/>
-    </partitioning>
-    <fields>
-      <field>
-        <name>Age</name>
-        <rename>edad</rename>
-      </field>
-      <field>
-        <name>Gender</name>
-        <rename>genero</rename>
-      </field>
-      <field>
-        <name>Total_Bilirubin</name>
-        <rename>bilirrubina_total</rename>
-      </field>
-      <field>
-        <name>Direct_Bilirubin</name>
-        <rename>bilirrubina_directa</rename>
-      </field>
-      <field>
-        <name>Alkaline_Phosphotase</name>
-        <rename>fosfatasa_alcalina</rename>
-      </field>
-      <field>
-        <name>Alamine_Aminotransferase</name>
-        <rename>alt_sgpt</rename>
-      </field>
-      <field>
-        <name>Aspartate_Aminotransferase</name>
-        <rename>ast_sgot</rename>
-      </field>
-      <field>
-        <name>Total_Protiens</name>
-        <rename>proteinas_totales</rename>
-      </field>
-      <field>
-        <name>Albumin</name>
-        <rename>albumina</rename>
-      </field>
-      <field>
-        <name>Albumin_and_Globulin_Ratio</name>
-        <rename>relacion_a_g</rename>
-      </field>
-      <field>
-        <name>Dataset</name>
-        <rename>diagnostico</rename>
-      </field>
-      <select_unspecified>N</select_unspecified>
-    </fields>
-    <attributes/>
-    <cluster_schema/>
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>80</xloc>
-      <yloc>176</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>Staging stg_lpd</name>
+    <name>Cargar tabla_enfermedades_1</name>
     <type>TableOutput</type>
     <description/>
     <distribute>Y</distribute>
@@ -745,7 +673,7 @@
     </partitioning>
     <connection>conection-mineria-untrm-bd</connection>
     <schema>public</schema>
-    <table>stg_lpd</table>
+    <table>tabla_enfermedades_1</table>
     <commit>1000</commit>
     <truncate>Y</truncate>
     <ignore_errors>N</ignore_errors>
@@ -762,207 +690,48 @@
     <return_field/>
     <fields>
       <field>
-        <column_name>age</column_name>
-        <stream_name>Age of the patient</stream_name>
+        <column_name>edad</column_name>
+        <stream_name>edad</stream_name>
       </field>
       <field>
-        <column_name>gender</column_name>
-        <stream_name>Gender of the patient</stream_name>
+        <column_name>genero</column_name>
+        <stream_name>genero</stream_name>
       </field>
       <field>
-        <column_name>tb</column_name>
-        <stream_name>Total Bilirubin</stream_name>
+        <column_name>bilirrubina_total</column_name>
+        <stream_name>bilirrubina_total</stream_name>
       </field>
       <field>
-        <column_name>db</column_name>
-        <stream_name>Direct Bilirubin</stream_name>
+        <column_name>bilirrubina_directa</column_name>
+        <stream_name>bilirrubina_directa</stream_name>
       </field>
       <field>
-        <column_name>alkphos</column_name>
-        <stream_name> Alkphos Alkaline Phosphotase</stream_name>
+        <column_name>fosfatasa_alcalina</column_name>
+        <stream_name>fosfatasa_alcalina</stream_name>
       </field>
       <field>
-        <column_name>sgpt</column_name>
-        <stream_name> Sgpt Alamine Aminotransferase</stream_name>
+        <column_name>alt_sgpt</column_name>
+        <stream_name>alt_sgpt</stream_name>
       </field>
       <field>
-        <column_name>sgot</column_name>
-        <stream_name>Sgot Aspartate Aminotransferase</stream_name>
+        <column_name>ast_sgot</column_name>
+        <stream_name>ast_sgot</stream_name>
       </field>
       <field>
-        <column_name>tp</column_name>
-        <stream_name>Total Protiens</stream_name>
+        <column_name>proteinas_totales</column_name>
+        <stream_name>proteinas_totales</stream_name>
       </field>
       <field>
-        <column_name>alb</column_name>
-        <stream_name> ALB Albumin</stream_name>
+        <column_name>albumina</column_name>
+        <stream_name>albumina</stream_name>
       </field>
       <field>
-        <column_name>ag_ratio</column_name>
-        <stream_name>A/G Ratio Albumin and Globulin Ratio</stream_name>
+        <column_name>relacion_a_g</column_name>
+        <stream_name>relacion_a_g</stream_name>
       </field>
       <field>
-        <column_name>dataset</column_name>
-        <stream_name>Result</stream_name>
-      </field>
-    </fields>
-    <attributes/>
-    <cluster_schema/>
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>352</xloc>
-      <yloc>32</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>Limpiar vacios</name>
-    <type>ReplaceString</type>
-    <description/>
-    <distribute>Y</distribute>
-    <custom_distribution/>
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name/>
-    </partitioning>
-    <fields>
-      <field>
-        <in_stream_name>edad</in_stream_name>
-        <out_stream_name/>
-        <use_regex>yes</use_regex>
-        <replace_string>^\s*$</replace_string>
-        <replace_by_string/>
-        <set_empty_string>N</set_empty_string>
-        <replace_field_by_string/>
-        <whole_word>no</whole_word>
-        <case_sensitive>no</case_sensitive>
-        <is_unicode>no</is_unicode>
-      </field>
-      <field>
-        <in_stream_name>genero</in_stream_name>
-        <out_stream_name/>
-        <use_regex>yes</use_regex>
-        <replace_string>^\s*$</replace_string>
-        <replace_by_string/>
-        <set_empty_string>N</set_empty_string>
-        <replace_field_by_string/>
-        <whole_word>no</whole_word>
-        <case_sensitive>no</case_sensitive>
-        <is_unicode>no</is_unicode>
-      </field>
-      <field>
-        <in_stream_name>bilirrubina_total</in_stream_name>
-        <out_stream_name/>
-        <use_regex>yes</use_regex>
-        <replace_string>^\s*$</replace_string>
-        <replace_by_string/>
-        <set_empty_string>N</set_empty_string>
-        <replace_field_by_string/>
-        <whole_word>no</whole_word>
-        <case_sensitive>no</case_sensitive>
-        <is_unicode>no</is_unicode>
-      </field>
-      <field>
-        <in_stream_name>bilirrubina_directa</in_stream_name>
-        <out_stream_name/>
-        <use_regex>yes</use_regex>
-        <replace_string>^\s*$</replace_string>
-        <replace_by_string/>
-        <set_empty_string>N</set_empty_string>
-        <replace_field_by_string/>
-        <whole_word>no</whole_word>
-        <case_sensitive>no</case_sensitive>
-        <is_unicode>no</is_unicode>
-      </field>
-      <field>
-        <in_stream_name>fosfatasa_alcalina</in_stream_name>
-        <out_stream_name/>
-        <use_regex>yes</use_regex>
-        <replace_string>^\s*$</replace_string>
-        <replace_by_string/>
-        <set_empty_string>N</set_empty_string>
-        <replace_field_by_string/>
-        <whole_word>no</whole_word>
-        <case_sensitive>no</case_sensitive>
-        <is_unicode>no</is_unicode>
-      </field>
-      <field>
-        <in_stream_name>alt_sgpt</in_stream_name>
-        <out_stream_name/>
-        <use_regex>yes</use_regex>
-        <replace_string>^\s*$</replace_string>
-        <replace_by_string/>
-        <set_empty_string>N</set_empty_string>
-        <replace_field_by_string/>
-        <whole_word>no</whole_word>
-        <case_sensitive>no</case_sensitive>
-        <is_unicode>no</is_unicode>
-      </field>
-      <field>
-        <in_stream_name>ast_sgot</in_stream_name>
-        <out_stream_name/>
-        <use_regex>yes</use_regex>
-        <replace_string>^\s*$</replace_string>
-        <replace_by_string/>
-        <set_empty_string>N</set_empty_string>
-        <replace_field_by_string/>
-        <whole_word>no</whole_word>
-        <case_sensitive>no</case_sensitive>
-        <is_unicode>no</is_unicode>
-      </field>
-      <field>
-        <in_stream_name>proteinas_totales</in_stream_name>
-        <out_stream_name/>
-        <use_regex>yes</use_regex>
-        <replace_string>^\s*$</replace_string>
-        <replace_by_string/>
-        <set_empty_string>N</set_empty_string>
-        <replace_field_by_string/>
-        <whole_word>no</whole_word>
-        <case_sensitive>no</case_sensitive>
-        <is_unicode>no</is_unicode>
-      </field>
-      <field>
-        <in_stream_name>albumina</in_stream_name>
-        <out_stream_name/>
-        <use_regex>yes</use_regex>
-        <replace_string>^\s*$</replace_string>
-        <replace_by_string/>
-        <set_empty_string>N</set_empty_string>
-        <replace_field_by_string/>
-        <whole_word>no</whole_word>
-        <case_sensitive>no</case_sensitive>
-        <is_unicode>no</is_unicode>
-      </field>
-      <field>
-        <in_stream_name>relacion_a_g</in_stream_name>
-        <out_stream_name/>
-        <use_regex>yes</use_regex>
-        <replace_string>^\s*$</replace_string>
-        <replace_by_string/>
-        <set_empty_string>N</set_empty_string>
-        <replace_field_by_string/>
-        <whole_word>no</whole_word>
-        <case_sensitive>no</case_sensitive>
-        <is_unicode>no</is_unicode>
-      </field>
-      <field>
-        <in_stream_name>diagnostico</in_stream_name>
-        <out_stream_name/>
-        <use_regex>yes</use_regex>
-        <replace_string>^\s*$</replace_string>
-        <replace_by_string/>
-        <set_empty_string>N</set_empty_string>
-        <replace_field_by_string/>
-        <whole_word>no</whole_word>
-        <case_sensitive>no</case_sensitive>
-        <is_unicode>no</is_unicode>
+        <column_name>diagnostico</column_name>
+        <stream_name>diagnostico</stream_name>
       </field>
     </fields>
     <attributes/>
@@ -975,209 +744,6 @@
     </remotesteps>
     <GUI>
       <xloc>368</xloc>
-      <yloc>176</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>Filtrar criticos</name>
-    <type>FilterRows</type>
-    <description/>
-    <distribute>Y</distribute>
-    <custom_distribution/>
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name/>
-    </partitioning>
-    <send_true_to>Imputar mediana</send_true_to>
-    <send_false_to/>
-    <compare>
-      <condition>
-        <negated>N</negated>
-        <conditions>
-          <condition>
-            <negated>N</negated>
-            <leftvalue>genero</leftvalue>
-            <function>IS NOT NULL</function>
-            <rightvalue/>
-          </condition>
-          <condition>
-            <negated>N</negated>
-            <operator>AND</operator>
-            <leftvalue>edad</leftvalue>
-            <function>IS NOT NULL</function>
-            <rightvalue/>
-          </condition>
-        </conditions>
-      </condition>
-    </compare>
-    <attributes/>
-    <cluster_schema/>
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>608</xloc>
-      <yloc>176</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>Imputar mediana</name>
-    <type>IfNull</type>
-    <description/>
-    <distribute>Y</distribute>
-    <custom_distribution/>
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name/>
-    </partitioning>
-    <replaceAllByValue/>
-    <replaceAllMask/>
-    <selectFields>Y</selectFields>
-    <selectValuesType>N</selectValuesType>
-    <setEmptyStringAll>N</setEmptyStringAll>
-    <valuetypes>
-      </valuetypes>
-    <fields>
-      <field>
-        <name>relacion_a_g</name>
-        <value>0.93</value>
-        <mask/>
-        <set_empty_string>N</set_empty_string>
-      </field>
-    </fields>
-    <attributes/>
-    <cluster_schema/>
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>896</xloc>
-      <yloc>176</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>Normalizar genero</name>
-    <type>StringOperations</type>
-    <description/>
-    <distribute>Y</distribute>
-    <custom_distribution/>
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name/>
-    </partitioning>
-    <fields>
-      <field>
-        <in_stream_name>genero</in_stream_name>
-        <out_stream_name/>
-        <trim_type>both</trim_type>
-        <lower_upper>lower</lower_upper>
-        <padding_type/>
-        <pad_char/>
-        <pad_len/>
-        <init_cap/>
-        <mask_xml/>
-        <digits/>
-        <remove_special_characters/>
-      </field>
-    </fields>
-    <attributes/>
-    <cluster_schema/>
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>1152</xloc>
-      <yloc>176</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>Mapear genero</name>
-    <type>ValueMapper</type>
-    <description/>
-    <distribute>Y</distribute>
-    <custom_distribution/>
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name/>
-    </partitioning>
-    <field_to_use>genero</field_to_use>
-    <target_field/>
-    <non_match_default/>
-    <fields>
-      <field>
-        <source_value>male</source_value>
-        <target_value>M</target_value>
-      </field>
-      <field>
-        <source_value>female</source_value>
-        <target_value>F</target_value>
-      </field>
-    </fields>
-    <attributes/>
-    <cluster_schema/>
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>1376</xloc>
-      <yloc>176</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>Recodificar diagnostico</name>
-    <type>ValueMapper</type>
-    <description/>
-    <distribute>Y</distribute>
-    <custom_distribution/>
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name/>
-    </partitioning>
-    <field_to_use>diagnostico</field_to_use>
-    <target_field/>
-    <non_match_default/>
-    <fields>
-      <field>
-        <source_value>1</source_value>
-        <target_value>1</target_value>
-      </field>
-      <field>
-        <source_value>2</source_value>
-        <target_value>0</target_value>
-      </field>
-    </fields>
-    <attributes/>
-    <cluster_schema/>
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>1376</xloc>
       <yloc>320</yloc>
       <draw>Y</draw>
     </GUI>
@@ -1398,6 +964,447 @@
     </GUI>
   </step>
   <step>
+    <name>Eliminar duplicados</name>
+    <type>Unique</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <count_rows>Y</count_rows>
+    <count_field>repeticiones</count_field>
+    <reject_duplicate_row>N</reject_duplicate_row>
+    <error_description/>
+    <fields>
+      <field>
+        <name>edad</name>
+        <case_insensitive>N</case_insensitive>
+      </field>
+      <field>
+        <name>genero</name>
+        <case_insensitive>N</case_insensitive>
+      </field>
+      <field>
+        <name>bilirrubina_total</name>
+        <case_insensitive>N</case_insensitive>
+      </field>
+      <field>
+        <name>bilirrubina_directa</name>
+        <case_insensitive>N</case_insensitive>
+      </field>
+      <field>
+        <name>fosfatasa_alcalina</name>
+        <case_insensitive>N</case_insensitive>
+      </field>
+      <field>
+        <name>alt_sgpt</name>
+        <case_insensitive>N</case_insensitive>
+      </field>
+      <field>
+        <name>ast_sgot</name>
+        <case_insensitive>N</case_insensitive>
+      </field>
+      <field>
+        <name>proteinas_totales</name>
+        <case_insensitive>N</case_insensitive>
+      </field>
+      <field>
+        <name>albumina</name>
+        <case_insensitive>N</case_insensitive>
+      </field>
+      <field>
+        <name>relacion_a_g</name>
+        <case_insensitive>N</case_insensitive>
+      </field>
+      <field>
+        <name>diagnostico</name>
+        <case_insensitive>N</case_insensitive>
+      </field>
+    </fields>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>608</xloc>
+      <yloc>320</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Filtrar criticos</name>
+    <type>FilterRows</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <send_true_to>Imputar mediana</send_true_to>
+    <send_false_to/>
+    <compare>
+      <condition>
+        <negated>N</negated>
+        <conditions>
+          <condition>
+            <negated>N</negated>
+            <leftvalue>genero</leftvalue>
+            <function>IS NOT NULL</function>
+            <rightvalue/>
+          </condition>
+          <condition>
+            <negated>N</negated>
+            <operator>AND</operator>
+            <leftvalue>edad</leftvalue>
+            <function>IS NOT NULL</function>
+            <rightvalue/>
+          </condition>
+        </conditions>
+      </condition>
+    </compare>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>608</xloc>
+      <yloc>176</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Imputar mediana</name>
+    <type>IfNull</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <replaceAllByValue/>
+    <replaceAllMask/>
+    <selectFields>Y</selectFields>
+    <selectValuesType>N</selectValuesType>
+    <setEmptyStringAll>N</setEmptyStringAll>
+    <valuetypes>
+      </valuetypes>
+    <fields>
+      <field>
+        <name>relacion_a_g</name>
+        <value>0.90</value>
+        <mask/>
+        <set_empty_string>N</set_empty_string>
+      </field>
+      <field>
+        <name>bilirrubina_total</name>
+        <value>1.0</value>
+        <mask/>
+        <set_empty_string>N</set_empty_string>
+      </field>
+      <field>
+        <name>bilirrubina_directa</name>
+        <value>0.3</value>
+        <mask/>
+        <set_empty_string>N</set_empty_string>
+      </field>
+      <field>
+        <name>fosfatasa_alcalina</name>
+        <value>209</value>
+        <mask/>
+        <set_empty_string>N</set_empty_string>
+      </field>
+      <field>
+        <name>alt_sgpt</name>
+        <value>35</value>
+        <mask/>
+        <set_empty_string>N</set_empty_string>
+      </field>
+      <field>
+        <name>ast_sgot</name>
+        <value>42</value>
+        <mask/>
+        <set_empty_string>N</set_empty_string>
+      </field>
+      <field>
+        <name>proteinas_totales</name>
+        <value>6.6</value>
+        <mask/>
+        <set_empty_string>N</set_empty_string>
+      </field>
+      <field>
+        <name>albumina</name>
+        <value>3.1</value>
+        <mask/>
+        <set_empty_string>N</set_empty_string>
+      </field>
+    </fields>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>896</xloc>
+      <yloc>176</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Limpiar vacios</name>
+    <type>ReplaceString</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <fields>
+      <field>
+        <in_stream_name>edad</in_stream_name>
+        <out_stream_name/>
+        <use_regex>yes</use_regex>
+        <replace_string>^\s*$</replace_string>
+        <replace_by_string/>
+        <set_empty_string>N</set_empty_string>
+        <replace_field_by_string/>
+        <whole_word>no</whole_word>
+        <case_sensitive>no</case_sensitive>
+        <is_unicode>no</is_unicode>
+      </field>
+      <field>
+        <in_stream_name>genero</in_stream_name>
+        <out_stream_name/>
+        <use_regex>yes</use_regex>
+        <replace_string>^\s*$</replace_string>
+        <replace_by_string/>
+        <set_empty_string>N</set_empty_string>
+        <replace_field_by_string/>
+        <whole_word>no</whole_word>
+        <case_sensitive>no</case_sensitive>
+        <is_unicode>no</is_unicode>
+      </field>
+      <field>
+        <in_stream_name>bilirrubina_total</in_stream_name>
+        <out_stream_name/>
+        <use_regex>yes</use_regex>
+        <replace_string>^\s*$</replace_string>
+        <replace_by_string/>
+        <set_empty_string>N</set_empty_string>
+        <replace_field_by_string/>
+        <whole_word>no</whole_word>
+        <case_sensitive>no</case_sensitive>
+        <is_unicode>no</is_unicode>
+      </field>
+      <field>
+        <in_stream_name>bilirrubina_directa</in_stream_name>
+        <out_stream_name/>
+        <use_regex>yes</use_regex>
+        <replace_string>^\s*$</replace_string>
+        <replace_by_string/>
+        <set_empty_string>N</set_empty_string>
+        <replace_field_by_string/>
+        <whole_word>no</whole_word>
+        <case_sensitive>no</case_sensitive>
+        <is_unicode>no</is_unicode>
+      </field>
+      <field>
+        <in_stream_name>fosfatasa_alcalina</in_stream_name>
+        <out_stream_name/>
+        <use_regex>yes</use_regex>
+        <replace_string>^\s*$</replace_string>
+        <replace_by_string/>
+        <set_empty_string>N</set_empty_string>
+        <replace_field_by_string/>
+        <whole_word>no</whole_word>
+        <case_sensitive>no</case_sensitive>
+        <is_unicode>no</is_unicode>
+      </field>
+      <field>
+        <in_stream_name>alt_sgpt</in_stream_name>
+        <out_stream_name/>
+        <use_regex>yes</use_regex>
+        <replace_string>^\s*$</replace_string>
+        <replace_by_string/>
+        <set_empty_string>N</set_empty_string>
+        <replace_field_by_string/>
+        <whole_word>no</whole_word>
+        <case_sensitive>no</case_sensitive>
+        <is_unicode>no</is_unicode>
+      </field>
+      <field>
+        <in_stream_name>ast_sgot</in_stream_name>
+        <out_stream_name/>
+        <use_regex>yes</use_regex>
+        <replace_string>^\s*$</replace_string>
+        <replace_by_string/>
+        <set_empty_string>N</set_empty_string>
+        <replace_field_by_string/>
+        <whole_word>no</whole_word>
+        <case_sensitive>no</case_sensitive>
+        <is_unicode>no</is_unicode>
+      </field>
+      <field>
+        <in_stream_name>proteinas_totales</in_stream_name>
+        <out_stream_name/>
+        <use_regex>yes</use_regex>
+        <replace_string>^\s*$</replace_string>
+        <replace_by_string/>
+        <set_empty_string>N</set_empty_string>
+        <replace_field_by_string/>
+        <whole_word>no</whole_word>
+        <case_sensitive>no</case_sensitive>
+        <is_unicode>no</is_unicode>
+      </field>
+      <field>
+        <in_stream_name>albumina</in_stream_name>
+        <out_stream_name/>
+        <use_regex>yes</use_regex>
+        <replace_string>^\s*$</replace_string>
+        <replace_by_string/>
+        <set_empty_string>N</set_empty_string>
+        <replace_field_by_string/>
+        <whole_word>no</whole_word>
+        <case_sensitive>no</case_sensitive>
+        <is_unicode>no</is_unicode>
+      </field>
+      <field>
+        <in_stream_name>relacion_a_g</in_stream_name>
+        <out_stream_name/>
+        <use_regex>yes</use_regex>
+        <replace_string>^\s*$</replace_string>
+        <replace_by_string/>
+        <set_empty_string>N</set_empty_string>
+        <replace_field_by_string/>
+        <whole_word>no</whole_word>
+        <case_sensitive>no</case_sensitive>
+        <is_unicode>no</is_unicode>
+      </field>
+      <field>
+        <in_stream_name>diagnostico</in_stream_name>
+        <out_stream_name/>
+        <use_regex>yes</use_regex>
+        <replace_string>^\s*$</replace_string>
+        <replace_by_string/>
+        <set_empty_string>N</set_empty_string>
+        <replace_field_by_string/>
+        <whole_word>no</whole_word>
+        <case_sensitive>no</case_sensitive>
+        <is_unicode>no</is_unicode>
+      </field>
+    </fields>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>368</xloc>
+      <yloc>176</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Mapear genero</name>
+    <type>ValueMapper</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <field_to_use>genero</field_to_use>
+    <target_field/>
+    <non_match_default/>
+    <fields>
+      <field>
+        <source_value>male</source_value>
+        <target_value>M</target_value>
+      </field>
+      <field>
+        <source_value>female</source_value>
+        <target_value>F</target_value>
+      </field>
+    </fields>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>1376</xloc>
+      <yloc>176</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Normalizar genero</name>
+    <type>StringOperations</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <fields>
+      <field>
+        <in_stream_name>genero</in_stream_name>
+        <out_stream_name/>
+        <trim_type>both</trim_type>
+        <lower_upper>lower</lower_upper>
+        <padding_type/>
+        <pad_char/>
+        <pad_len/>
+        <init_cap/>
+        <mask_xml/>
+        <digits/>
+        <remove_special_characters/>
+      </field>
+    </fields>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>1152</xloc>
+      <yloc>176</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
     <name>Ordenar filas</name>
     <type>SortRows</type>
     <description/>
@@ -1520,8 +1527,8 @@
     </GUI>
   </step>
   <step>
-    <name>Eliminar duplicados</name>
-    <type>Unique</type>
+    <name>Recodificar diagnostico</name>
+    <type>ValueMapper</type>
     <description/>
     <distribute>Y</distribute>
     <custom_distribution/>
@@ -1530,54 +1537,17 @@
       <method>none</method>
       <schema_name/>
     </partitioning>
-    <count_rows>Y</count_rows>
-    <count_field>repeticiones</count_field>
-    <reject_duplicate_row>N</reject_duplicate_row>
-    <error_description/>
+    <field_to_use>diagnostico</field_to_use>
+    <target_field/>
+    <non_match_default/>
     <fields>
       <field>
-        <name>edad</name>
-        <case_insensitive>N</case_insensitive>
+        <source_value>1</source_value>
+        <target_value>1</target_value>
       </field>
       <field>
-        <name>genero</name>
-        <case_insensitive>N</case_insensitive>
-      </field>
-      <field>
-        <name>bilirrubina_total</name>
-        <case_insensitive>N</case_insensitive>
-      </field>
-      <field>
-        <name>bilirrubina_directa</name>
-        <case_insensitive>N</case_insensitive>
-      </field>
-      <field>
-        <name>fosfatasa_alcalina</name>
-        <case_insensitive>N</case_insensitive>
-      </field>
-      <field>
-        <name>alt_sgpt</name>
-        <case_insensitive>N</case_insensitive>
-      </field>
-      <field>
-        <name>ast_sgot</name>
-        <case_insensitive>N</case_insensitive>
-      </field>
-      <field>
-        <name>proteinas_totales</name>
-        <case_insensitive>N</case_insensitive>
-      </field>
-      <field>
-        <name>albumina</name>
-        <case_insensitive>N</case_insensitive>
-      </field>
-      <field>
-        <name>relacion_a_g</name>
-        <case_insensitive>N</case_insensitive>
-      </field>
-      <field>
-        <name>diagnostico</name>
-        <case_insensitive>N</case_insensitive>
+        <source_value>2</source_value>
+        <target_value>0</target_value>
       </field>
     </fields>
     <attributes/>
@@ -1589,13 +1559,85 @@
       </output>
     </remotesteps>
     <GUI>
-      <xloc>608</xloc>
+      <xloc>1376</xloc>
       <yloc>320</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
   <step>
-    <name>Cargar tabla_enfermedades</name>
+    <name>Renombrar campos</name>
+    <type>SelectValues</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <fields>
+      <field>
+        <name>Age of the patient</name>
+        <rename>edad</rename>
+      </field>
+      <field>
+        <name>Gender of the patient</name>
+        <rename>genero</rename>
+      </field>
+      <field>
+        <name>Total Bilirubin</name>
+        <rename>bilirrubina_total</rename>
+      </field>
+      <field>
+        <name>Direct Bilirubin</name>
+        <rename>bilirrubina_directa</rename>
+      </field>
+      <field>
+        <name> Alkphos Alkaline Phosphotase</name>
+        <rename>fosfatasa_alcalina</rename>
+      </field>
+      <field>
+        <name> Sgpt Alamine Aminotransferase</name>
+        <rename>alt_sgpt</rename>
+      </field>
+      <field>
+        <name>Sgot Aspartate Aminotransferase</name>
+        <rename>ast_sgot</rename>
+      </field>
+      <field>
+        <name>Total Protiens</name>
+        <rename>proteinas_totales</rename>
+      </field>
+      <field>
+        <name> ALB Albumin</name>
+        <rename>albumina</rename>
+      </field>
+      <field>
+        <name>A/G Ratio Albumin and Globulin Ratio</name>
+        <rename>relacion_a_g</rename>
+      </field>
+      <field>
+        <name>Result</name>
+        <rename>diagnostico</rename>
+      </field>
+      <select_unspecified>N</select_unspecified>
+    </fields>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>80</xloc>
+      <yloc>176</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Staging stg_lpd</name>
     <type>TableOutput</type>
     <description/>
     <distribute>Y</distribute>
@@ -1607,7 +1649,7 @@
     </partitioning>
     <connection>conection-mineria-untrm-bd</connection>
     <schema>public</schema>
-    <table>tabla_enfermedades</table>
+    <table>stg_lpd</table>
     <commit>1000</commit>
     <truncate>Y</truncate>
     <ignore_errors>N</ignore_errors>
@@ -1624,48 +1666,48 @@
     <return_field/>
     <fields>
       <field>
-        <column_name>edad</column_name>
-        <stream_name>edad</stream_name>
+        <column_name>age</column_name>
+        <stream_name>Age of the patient</stream_name>
       </field>
       <field>
-        <column_name>genero</column_name>
-        <stream_name>genero</stream_name>
+        <column_name>gender</column_name>
+        <stream_name>Gender of the patient</stream_name>
       </field>
       <field>
-        <column_name>bilirrubina_total</column_name>
-        <stream_name>bilirrubina_total</stream_name>
+        <column_name>tb</column_name>
+        <stream_name>Total Bilirubin</stream_name>
       </field>
       <field>
-        <column_name>bilirrubina_directa</column_name>
-        <stream_name>bilirrubina_directa</stream_name>
+        <column_name>db</column_name>
+        <stream_name>Direct Bilirubin</stream_name>
       </field>
       <field>
-        <column_name>fosfatasa_alcalina</column_name>
-        <stream_name>fosfatasa_alcalina</stream_name>
+        <column_name>alkphos</column_name>
+        <stream_name> Alkphos Alkaline Phosphotase</stream_name>
       </field>
       <field>
-        <column_name>alt_sgpt</column_name>
-        <stream_name>alt_sgpt</stream_name>
+        <column_name>sgpt</column_name>
+        <stream_name> Sgpt Alamine Aminotransferase</stream_name>
       </field>
       <field>
-        <column_name>ast_sgot</column_name>
-        <stream_name>ast_sgot</stream_name>
+        <column_name>sgot</column_name>
+        <stream_name>Sgot Aspartate Aminotransferase</stream_name>
       </field>
       <field>
-        <column_name>proteinas_totales</column_name>
-        <stream_name>proteinas_totales</stream_name>
+        <column_name>tp</column_name>
+        <stream_name>Total Protiens</stream_name>
       </field>
       <field>
-        <column_name>albumina</column_name>
-        <stream_name>albumina</stream_name>
+        <column_name>alb</column_name>
+        <stream_name> ALB Albumin</stream_name>
       </field>
       <field>
-        <column_name>relacion_a_g</column_name>
-        <stream_name>relacion_a_g</stream_name>
+        <column_name>ag_ratio</column_name>
+        <stream_name>A/G Ratio Albumin and Globulin Ratio</stream_name>
       </field>
       <field>
-        <column_name>diagnostico</column_name>
-        <stream_name>diagnostico</stream_name>
+        <column_name>dataset</column_name>
+        <stream_name>Result</stream_name>
       </field>
     </fields>
     <attributes/>
@@ -1677,8 +1719,8 @@
       </output>
     </remotesteps>
     <GUI>
-      <xloc>368</xloc>
-      <yloc>320</yloc>
+      <xloc>352</xloc>
+      <yloc>32</yloc>
       <draw>Y</draw>
     </GUI>
   </step>

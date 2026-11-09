@@ -19,7 +19,7 @@ Este archivo da a un asistente de IA (Claude, Copilot, ChatGPT, etc.) **todo el 
 | T3 `t3_integracion.ktr`: rama de integración (pasos 1 a 9) | Integrante 1 | **Hecho** (19 109 → 18 554; E=0) |
 | T3 `t3_integracion.ktr`: rama de comunes (pasos 10 a 14) | Integrante 3 | **Hecho** (18 554 integrada, 555 comunes; E=0; revisado el `.ktr`) |
 | Demostración Insert/Update (actividad 8, sección 9.5) | Por asignar | **Pendiente**: no está en `t3_integracion.ktr` |
-| Job `job_etl.kjb` | Integrante 4 | **Pendiente, sigue ahora** (sección 10, rama `job-etl`) |
+| Job `job_etl.kjb` | Integrante 4 | **Hecho** (T1→T2→T3 con hops condicionales; 570 / 18 539 / 18 554 / 555; E=0; revisado el `.kjb`) |
 | Consultas de verificación y capturas finales | Todos | Pendiente (sección 11) |
 | Informe (carátula y 5 preguntas) | Todos | Pendiente (sección 13) |
 
@@ -27,7 +27,7 @@ Este archivo da a un asistente de IA (Claude, Copilot, ChatGPT, etc.) **todo el 
 
 **Cada parte se trabaja en su propia rama de Git y se integra a `main` con un Pull Request** (ramas `t2-lpd`, `t3-integracion` y `job-etl`; detalle en la sección 3).
 
-**Punto actual:** T1, T2 y T3 están **completos y fusionados en `main`** (T3: integración 18 554 + comunes 555, verificadas con Run y en DBeaver; hop duplicado Leer LPD → Origen LPD eliminado y revalidado). Sigue el Integrante 4 con el job (sección 10), creando la rama `job-etl` desde `main` actualizado. Queda pendiente aparte la demostración de Insert/Update (sección 9.5).
+**Punto actual:** T1, T2, T3 y el job están **completos y fusionados en `main`** (job: T1→T2→T3 con hops condicionales, conteos 570 / 18 539 / 18 554 / 555, E=0). Queda pendiente aparte la demostración de Insert/Update (sección 9.5), las consultas de verificación con capturas (sección 11) y el informe (sección 13).
 
 ---
 
@@ -642,7 +642,7 @@ Commit y push de `t3_insert_update.ktr` en su propia rama (por ejemplo `insert-u
 
 ---
 
-## 10. Job (`job_etl.kjb`) (Integrante 4): PENDIENTE
+## 10. Job (`job_etl.kjb`) (Integrante 4): HECHO
 
 ### 10.0 Qué es y qué debe lograr
 

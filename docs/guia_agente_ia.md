@@ -17,7 +17,7 @@ Este archivo da a un asistente de IA (Claude, Copilot, ChatGPT, etc.) **todo el 
 | T2 `t2_lpd.ktr`: CSV file input y Staging stg_lpd | Integrante 1 | **Hecho** |
 | T2 `t2_lpd.ktr`: desde **Renombrar campos** hasta el final | Integrante 2 | **Hecho** (30 691 → 18 539; E=0) |
 | T3 `t3_integracion.ktr`: rama de integración (pasos 1 a 9) | Integrante 1 | **Hecho** (19 109 → 18 554; E=0) |
-| T3 `t3_integracion.ktr`: rama de comunes (pasos 10 a 14) e Insert/Update | Integrante 3 | **Pendiente, continuar aquí** (sección 9.3) |
+| T3 `t3_integracion.ktr`: rama de comunes (pasos 10 a 14) e Insert/Update | Integrante 3 | **Hecho** (18 554 integrada, 555 comunes; E=0) |
 | Job `job_etl.kjb` | Integrante 4 | Pendiente (sección 10) |
 | Consultas de verificación y capturas finales | Todos | Pendiente (sección 11) |
 | Informe (carátula y 5 preguntas) | Todos | Pendiente (sección 13) |
@@ -26,7 +26,7 @@ Este archivo da a un asistente de IA (Claude, Copilot, ChatGPT, etc.) **todo el 
 
 **Cada parte se trabaja en su propia rama de Git y se integra a `main` con un Pull Request** (ramas `t2-lpd`, `t3-integracion` y `job-etl`; detalle en la sección 3).
 
-**Punto actual:** T3 está a medias **en `main`** (rama de integración hecha y verificada). El Integrante 3 crea la rama `t3-integracion` **desde `main` actualizado** y continúa ahí. Instrucciones exactas en la sección 9.0.
+**Punto actual:** T3 está **completo** en la rama `t3-integracion` (integración 18 554 + comunes 555, verificadas con Run y en DBeaver). Sigue el Integrante 4 con el job (sección 10), creando la rama `job-etl` desde `main` actualizado.
 
 ---
 
